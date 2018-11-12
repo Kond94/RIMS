@@ -24,7 +24,9 @@ namespace RIMS.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string LastIpAddress { get; set; }
+        [Display(Name = "Monitoring Device")]
         public virtual MonitoringDevice MonitoringDevice { get; set; }
+        [Display(Name = "Capacity (Eggs)")]
         public virtual IncubatorModel IncubatorModel { get; set; }
         public virtual ICollection<Measurement> Measurements { get; set; }
         public virtual ICollection<Rack> Racks { get; set; }

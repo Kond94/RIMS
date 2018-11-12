@@ -67,7 +67,7 @@ namespace RIMS.Controllers
         // GET: Incubators/Create
         public IActionResult Create()
         {
-            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "IncubatorModelId");
+            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "Capacity");
             ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "MonitoringDeviceId", "Name");
             return View();
         }
@@ -108,7 +108,7 @@ namespace RIMS.Controllers
                             {
                                 Column = rackCol,
                                 Row = rackRow,
-                                EggTypeId = 1,
+                                EggTypeId = _context.EggTypes.SingleOrDefault(eT => eT.Name == "None").EggTypeId,
                                 RackId = _context.Racks.Where(r => r.IncubatorId == incubator.IncubatorId).SingleOrDefault(r => r.RackNumber == rack).RackId
                             };
 
@@ -124,7 +124,7 @@ namespace RIMS.Controllers
 
             }
 
-            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "IncubatorModelId", incubator.IncubatorModelId);
+            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "Capacity", incubator.IncubatorModelId);
             ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "MonitoringDeviceId", "Name", incubator.MonitoringDeviceId);
             return View(incubator);
         }
@@ -142,7 +142,7 @@ namespace RIMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "IncubatorModelId", incubator.IncubatorModelId);
+            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "Capacity", incubator.IncubatorModelId);
             ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "MonitoringDeviceId", "Name", incubator.MonitoringDeviceId);
             return View(incubator);
         }
@@ -179,7 +179,7 @@ namespace RIMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "IncubatorModelId", incubator.IncubatorModelId);
+            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "Capacity", incubator.IncubatorModelId);
             ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "MonitoringDeviceId", "Name", incubator.MonitoringDeviceId);
             return View(incubator);
         }

@@ -30,7 +30,7 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label asp-for="LastIpAddress" class="control-label"></label>
                 <input asp-for="LastIpAddress" class="form-control" />
                 <span asp-validation-for="LastIpAddress" class="text-danger"></span>
@@ -41,14 +41,14 @@
                 <span asp-validation-for="LastIpAddress" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-success" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary" asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
