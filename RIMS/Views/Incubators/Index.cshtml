@@ -1,0 +1,67 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@model IEnumerable<RIMS.Models.Incubator>
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+@if (SignInManager.IsSignedIn(User))
+{
+    <h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastIpAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MonitoringDevice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IncubatorModel)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastIpAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MonitoringDevice.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IncubatorModel.IncubatorModelId)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IncubatorId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.IncubatorId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IncubatorId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}

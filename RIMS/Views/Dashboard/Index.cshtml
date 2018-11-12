@@ -1,0 +1,90 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View</h2>
+<div class="row">
+    <div class="col-sm-3">
+
+        <div class="form-group" style="margin-bottom: 20px">
+            <label for="devicesMenu">Incubator:</label>
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 185px">
+                    @Model.Incubator.Name
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="devicesMenu">
+                    @foreach (var item in Model.Incubators)
+                    {
+                        <li><a href="@Url.Action("Index", new {id = item.IncubatorId})">@item.Name</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label>Last measurements:</label><br />
+            <div class="dropdown">
+                <div class="alert alert-info" style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">X&deg; Celcius</div>
+            </div>
+            <div class="dropdown">
+                <div class="alert alert-info" style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">X% Humidity</div>
+            </div>
+            <span style="font-style: italic">As of:</span>
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <div id="chart1"></div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript" src="~/lib/moment.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="~/lib/node_modules/moment/moment.min.js"></script>
+
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(callback);
+
+        function callback() {
+            var option = {
+                title: "Real-Time Chart",
+                width: 900,
+                height: 400,
+                legend: { position: 'none' },
+                vAxis: { viewWindow: { min: -1, max: 11 }, baselineColor: 'transparent' },
+                chartArea: {
+                    height: '100%', width: '100%', left: 100,
+                    backgroundColor: { stroke: "gray", strokeWidth: 1 }
+                },
+                pointSize: 10
+            };
+            var chart = new google.visualization.LineChart(document.getElementById('chart1'));
+            var data = new google.visualization.DataTable();
+            data.addColumn('datetime', 'TimeStamp');
+            data.addColumn('number', 'Value');
+
+            drawChart();
+            setInterval(drawChart, 1000);
+
+            function drawChart() {
+                $.get('Dashboard/GetRealTimeData', function (d) {
+                    var timeStamp = new Date(d.timeStamp);
+                    var time = { v: timeStamp, f: moment(timeStamp).format('HH:mm:ss') };
+                    var val = d.dataValue;
+                    data.addRow([time, val]);
+                    if (data.getNumberOfRows() > 20) {
+                        data.removeRow(0);
+                    }
+                    chart.draw(data, option);
+                });
+            }
+        }
+    </script>
+}
+
+

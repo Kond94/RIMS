@@ -1,0 +1,143 @@
+﻿@model RIMS.Models.ViewModels.EggManagementViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Egg Management</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-3">
+
+        <div class="form-group" style="margin-bottom: 20px">
+            <label for="devicesMenu">Incubator:</label>
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 185px">
+                    @Model.Incubator.Name
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="devicesMenu">
+                    @foreach (var item in Model.Incubators)
+                    {
+                        <li><a href="@Url.Action("Index", new {id = item.IncubatorId})">@item.Name</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <h3> Hatching Calender</h3>
+        <hr />
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tr>
+                <td>
+                    @DateTime.Now
+                </td>
+                <td>
+                    Brood: Rack 1 Col 1 Row 2
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-sm-9">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Rack Number
+                    </th>
+                    <th style="text-align:center">
+                        
+                    </th>
+                    <th style="text-align:center">
+                        Column
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Racks)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RackNumber)
+
+                        </td>
+                        <td style="vertical-align:central">
+                            Row
+                        </td>
+                        <td>
+                            <table class="table table-hover table-responsive table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            
+                                        </th>
+                                        @for (var i = 1; i <= Model.Incubator.IncubatorModel.RackLength; i++)
+                                        {
+                                            <th>
+                                                @i
+                                            </th>
+                                        }
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @for (var row = 1; row <= Model.Incubator.IncubatorModel.RackWidth; row++)
+                                    {
+                                        <tr>
+                                            <td>@row</td>
+                                            @for (var col = 1; col <= Model.Incubator.IncubatorModel.RackLength; col++)
+                                            {
+
+                                                @foreach (var tray in Model.RackContents.Where(t => t.RackId == item.RackId).Where(t => t.Row == row).Where(t => t.Column == col))
+                                                {
+                                                    var style = "";
+                                                    @if (tray.Eggtype.Name == "Chicken") {
+                                                         style = "azure";
+                                                    } 
+                                                    else if (tray.Eggtype.Name == "Quail")
+                                                        {
+                                                        style = "green";
+                                                    }
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width:80px">
+                                                                @tray.Eggtype.Name
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu" aria-labelledby="devicesMenu">
+                                                                @foreach (var eggtype in Model.EggTypes)
+                                                                {
+                                                                    <li><a href="@Url.Action("ChangeTray", new {trayId = tray.RackContentId, eggTypeId = eggtype.EggTypeId, incubatorId = Model.Incubator.IncubatorId })">@eggtype.Name</a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                }
+
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
