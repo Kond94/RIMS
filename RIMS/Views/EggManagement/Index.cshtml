@@ -5,125 +5,149 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <h2>Egg Management</h2>
 <hr />
 @{ if (Model.Incubator.Id != 0)
     {
-<div class="row">
-    <div class="col-sm-3">
+        <div class="row">
+            <div class="col-sm-3">
 
-        <div class="form-group" style="margin-bottom: 20px">
-            <h4>Incubator:</h4>
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 185px">
-                    @Model.Incubator.Name
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="devicesMenu">
-                    @foreach (var item in Model.Incubators)
-                    {
-                        <li><a href="@Url.Action("Index", new { id = item.Id })">@item.Name</a></li>
-                    }
-                </ul>
+                <div class="form-group" style="margin-bottom: 20px">
+                    <h4>Incubator:</h4>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 185px">
+                            @Model.Incubator.Name
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="devicesMenu">
+                            @foreach (var item in Model.Incubators)
+                            {
+                                <li><a href="@Url.Action("Index", new { id = item.Id })">@item.Name</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <hr />
+                    <div>
+                        <button class="btn btn-success" type="button">
+                            <span class="glyphicon glyphicon-calendar"></span>
+
+                            View Hatching Calender
+                        </button>
+                    </div>
+                </div>
+                <h4> Upcoming Dates:</h4>
+                <hr />
+
             </div>
-            <hr />
-            <div>
-                <button class="btn btn-success" type="button">
-                    <span class="glyphicon glyphicon-calendar"></span>
+            <div class="col-sm-9">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Rack Number
+                            </th>
 
-                    View Hatching Calender
-                </button>
-            </div>
-        </div>
-        <h4> Upcoming Dates:</h4>
-        <hr />
-        
-    </div>
-    <div class="col-sm-9">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>
-                        Rack Number
-                    </th>
-                    
-                    <th style="text-align:center">
-                        Column
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var rack in Model.Racks)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => rack.RackNumber)
-                        </td>
-                        
-                        <td>
-                            <table class="table table-hover table-responsive table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            
-                                        </th>
-                                        @for (var rackNumber = 1; rackNumber <= Model.Incubator.IncubatorModel.RackLength; rackNumber++)
-                                        {
-                                            <th>
-                                                @rackNumber
-                                            </th>
-                                        }
+                            <th style="text-align:center">
+                                Column
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var rack in Model.Racks)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => rack.RackNumber)
+                                </td>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
+                                <td>
+                                    <table class="table table-hover table-responsive table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>
 
-                                    @for (var rowNumber = 1; rowNumber <= Model.Incubator.IncubatorModel.RackWidth; rowNumber++)
-                                    {
-                                        <tr>
-                                            <td>@rowNumber</td>
-                                            @for (var colNumber = 1; colNumber <= Model.Incubator.IncubatorModel.RackLength; colNumber++)
-                                            {
-
-                                                @foreach (var tray in Model.Trays.Where(t => t.RackId == rack.Id).Where(t => t.Row == rowNumber).Where(t => t.Column == colNumber))
+                                                </th>
+                                                @for (var rackNumber = 1; rackNumber <= Model.Incubator.IncubatorModel.RackLength; rackNumber++)
                                                 {
-                                                    <td>
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width:80px">
-                                                                @tray.Eggtype.Name
-                                                                <span class="caret"></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu" aria-labelledby="devicesMenu">
-                                                                @foreach (var eggtype in Model.EggTypes)
-                                                                {
-                                                                    <li><a href="@Url.Action("ChangeTray", new { trayId = tray.Id, eggTypeId = eggtype.Id, incubatorId = Model.Incubator.Id })">@eggtype.Name</a></li>
-                                                                }
-                                                            </ul>
-                                                        </div>
-                                                    </td>
+                                                    <th>
+                                                        @rackNumber
+                                                    </th>
                                                 }
 
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @for (var rowNumber = 1; rowNumber <= Model.Incubator.IncubatorModel.RackWidth; rowNumber++)
+                                            {
+                                                <tr>
+                                                    <td>@rowNumber</td>
+                                                    @for (var colNumber = 1; colNumber <= Model.Incubator.IncubatorModel.RackLength; colNumber++)
+                                                    {
+
+                                                        @foreach (var tray in Model.Trays.Where(t => t.RackId == rack.Id).Where(t => t.Row == rowNumber).Where(t => t.Column == colNumber))
+                                                        {
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <button id="@tray.Id" class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="width:80px">
+                                                                        @tray.Eggtype.Name
+                                                                        <span class="caret"></span>
+                                                                    </button>
+
+                                                                    <ul class="dropdown-menu">
+
+                                                                        @foreach (var eggtype in Model.EggTypes)
+                                                                        {
+
+                                                                            <li><a onclick="loadDoc(@tray.Id, @eggtype.Id, @Model.Incubator.Id)">@eggtype.Name</a></li>
+                                                                        }
+                                                                    </ul>
+                                                                </div>
+                                                            </td>
+                                                        }
+
+                                                    }
+                                                </tr>
                                             }
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                        </tbody>
+                                    </table>
 
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
 
-    </div>
-</div>
+            </div>
+        </div>
 
     }
 
     else
     {
-    <h4>
-        Sorry, you havent added any incubators yet, please add in the "My incubators" page.
-    </h4>
-        }
+        <h4>
+            Sorry, you havent added any incubators yet, please add in the "My incubators" page.
+        </h4>
+    }
 }
+@*href="@Url.Action("ChangeTray", new { trayId = tray.Id, eggtypeId = eggtype.Id, IncubatorId = Model.Incubator.Id })"*@
+@section scripts{
+    <script>
+            function loadDoc(trayId, eggTypeId, IncubatorId) {
+                var url = "@Url.Action("ChangeTray").ToString()" + "?trayId=" + trayId + "&eggtypeId=" + eggTypeId + "&incubatorId=" + IncubatorId;
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        document.getElementById(trayId).innerHTML = xhttp.responseText + "<span class=\"caret\"></span>";
+                    }
+                };
+                xhttp.open("GET", url, true);
+                xhttp.send();
+            }
+    </script>
+}
+
+
+
+

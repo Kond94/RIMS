@@ -92,7 +92,9 @@ namespace RIMS.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("index", incubatorId);
+            tray = _context.Trays.Include(t => t.Eggtype).SingleOrDefault(t => t.Id == trayId);
+
+            return Ok(tray.Eggtype.Name);
         }
     }
 }
