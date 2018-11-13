@@ -44,7 +44,7 @@ namespace RIMS.Controllers
             if (!id.HasValue)
             {
                 var incubator = incubators.First();
-                var measurements = await _context.Measurements.Where(m => m.IncubatorId == incubator.IncubatorId).ToListAsync();
+                var measurements = await _context.Measurements.Where(m => m.IncubatorId == incubator.Id).ToListAsync();
                 var viewModel = new DashboardViewModel
                 {
                     Incubator = incubator,
@@ -56,8 +56,8 @@ namespace RIMS.Controllers
             }
             else
             {
-                var incubator = incubators.SingleOrDefault(i => i.IncubatorId == id);
-                var measurements = await _context.Measurements.Where(m => m.IncubatorId == incubator.IncubatorId).ToListAsync();
+                var incubator = incubators.SingleOrDefault(i => i.Id == id);
+                var measurements = await _context.Measurements.Where(m => m.IncubatorId == incubator.Id).ToListAsync();
                 var viewModel = new DashboardViewModel
                 {
                     Incubator = incubator,

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RIMS.Data;
 
-namespace RIMS.Data.Migrations
+namespace RIMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -186,38 +186,38 @@ namespace RIMS.Data.Migrations
 
             modelBuilder.Entity("RIMS.Models.EggType", b =>
                 {
-                    b.Property<int>("EggTypeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
-                    b.HasKey("EggTypeId");
+                    b.HasKey("Id");
 
                     b.ToTable("EggTypes");
                 });
 
             modelBuilder.Entity("RIMS.Models.Incubator", b =>
                 {
-                    b.Property<int>("IncubatorId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasMaxLength(500);
 
                     b.Property<string>("IdentityUserId")
                         .IsRequired();
 
                     b.Property<int>("IncubatorModelId");
 
-                    b.Property<string>("LastIpAddress");
-
                     b.Property<int>("MonitoringDeviceId");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(255);
 
-                    b.HasKey("IncubatorId");
+                    b.HasKey("Id");
 
                     b.HasIndex("IdentityUserId");
 
@@ -230,7 +230,7 @@ namespace RIMS.Data.Migrations
 
             modelBuilder.Entity("RIMS.Models.IncubatorModel", b =>
                 {
-                    b.Property<int>("IncubatorModelId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -242,14 +242,14 @@ namespace RIMS.Data.Migrations
 
                     b.Property<byte>("RackWidth");
 
-                    b.HasKey("IncubatorModelId");
+                    b.HasKey("Id");
 
                     b.ToTable("IncubatorModels");
                 });
 
             modelBuilder.Entity("RIMS.Models.Measurement", b =>
                 {
-                    b.Property<int>("MeasurementId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -261,7 +261,7 @@ namespace RIMS.Data.Migrations
 
                     b.Property<int>("MeasurementTypeId");
 
-                    b.HasKey("MeasurementId");
+                    b.HasKey("Id");
 
                     b.HasIndex("IncubatorId");
 
@@ -272,39 +272,43 @@ namespace RIMS.Data.Migrations
 
             modelBuilder.Entity("RIMS.Models.MeasurementType", b =>
                 {
-                    b.Property<int>("MeasurementTypeId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasMaxLength(500);
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(255);
 
-                    b.HasKey("MeasurementTypeId");
+                    b.HasKey("Id");
 
                     b.ToTable("MeasurementTypes");
                 });
 
             modelBuilder.Entity("RIMS.Models.MonitoringDevice", b =>
                 {
-                    b.Property<int>("MonitoringDeviceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .HasMaxLength(500);
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(255);
 
-                    b.HasKey("MonitoringDeviceId");
+                    b.HasKey("Id");
 
                     b.ToTable("MonitoringDevices");
                 });
 
             modelBuilder.Entity("RIMS.Models.Rack", b =>
                 {
-                    b.Property<int>("RackId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -312,18 +316,20 @@ namespace RIMS.Data.Migrations
 
                     b.Property<byte>("RackNumber");
 
-                    b.HasKey("RackId");
+                    b.HasKey("Id");
 
                     b.HasIndex("IncubatorId");
 
                     b.ToTable("Racks");
                 });
 
-            modelBuilder.Entity("RIMS.Models.RackContent", b =>
+            modelBuilder.Entity("RIMS.Models.Tray", b =>
                 {
-                    b.Property<int>("RackContentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CandlingDate");
 
                     b.Property<byte>("Column");
 
@@ -331,17 +337,21 @@ namespace RIMS.Data.Migrations
 
                     b.Property<int>("EggTypeId");
 
+                    b.Property<DateTime>("HatchDate");
+
+                    b.Property<DateTime>("HatchPreparationDate");
+
                     b.Property<int>("RackId");
 
                     b.Property<byte>("Row");
 
-                    b.HasKey("RackContentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("EggTypeId");
 
                     b.HasIndex("RackId");
 
-                    b.ToTable("RackContents");
+                    b.ToTable("Trays");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -428,7 +438,7 @@ namespace RIMS.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("RIMS.Models.RackContent", b =>
+            modelBuilder.Entity("RIMS.Models.Tray", b =>
                 {
                     b.HasOne("RIMS.Models.EggType", "Eggtype")
                         .WithMany()
@@ -436,7 +446,7 @@ namespace RIMS.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("RIMS.Models.Rack", "Rack")
-                        .WithMany("RackContents")
+                        .WithMany("Trays")
                         .HasForeignKey("RackId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

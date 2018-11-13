@@ -7,7 +7,8 @@
 
 <h2>Egg Management</h2>
 <hr />
-
+@{ if (Model.Incubator.Id != 0)
+    {
 <div class="row">
     <div class="col-sm-3">
 
@@ -21,7 +22,7 @@
                 <ul class="dropdown-menu" aria-labelledby="devicesMenu">
                     @foreach (var item in Model.Incubators)
                     {
-                        <li><a href="@Url.Action("Index", new {id = item.IncubatorId})">@item.Name</a></li>
+                        <li><a href="@Url.Action("Index", new { id = item.Id })">@item.Name</a></li>
                     }
                 </ul>
             </div>
@@ -39,37 +40,26 @@
         
     </div>
     <div class="col-sm-9">
-        <br />
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th>
-                        <h2>@Model.Incubator.Name</h2>
-                    </th>
-                </tr>
-                <tr>
-                    <th>
                         Rack Number
                     </th>
-                    <th style="text-align:center">
-                        
-                    </th>
+                    
                     <th style="text-align:center">
                         Column
                     </th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Racks)
+                @foreach (var rack in Model.Racks)
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.RackNumber)
-
+                            @Html.DisplayFor(modelItem => rack.RackNumber)
                         </td>
-                        <td style="vertical-align:central">
-                            Row
-                        </td>
+                        
                         <td>
                             <table class="table table-hover table-responsive table-bordered">
                                 <thead>
@@ -77,10 +67,10 @@
                                         <th>
                                             
                                         </th>
-                                        @for (var i = 1; i <= Model.Incubator.IncubatorModel.RackLength; i++)
+                                        @for (var rackNumber = 1; rackNumber <= Model.Incubator.IncubatorModel.RackLength; rackNumber++)
                                         {
                                             <th>
-                                                @i
+                                                @rackNumber
                                             </th>
                                         }
 
@@ -88,23 +78,15 @@
                                 </thead>
                                 <tbody>
 
-                                    @for (var row = 1; row <= Model.Incubator.IncubatorModel.RackWidth; row++)
+                                    @for (var rowNumber = 1; rowNumber <= Model.Incubator.IncubatorModel.RackWidth; rowNumber++)
                                     {
                                         <tr>
-                                            <td>@row</td>
-                                            @for (var col = 1; col <= Model.Incubator.IncubatorModel.RackLength; col++)
+                                            <td>@rowNumber</td>
+                                            @for (var colNumber = 1; colNumber <= Model.Incubator.IncubatorModel.RackLength; colNumber++)
                                             {
 
-                                                @foreach (var tray in Model.RackContents.Where(t => t.RackId == item.RackId).Where(t => t.Row == row).Where(t => t.Column == col))
+                                                @foreach (var tray in Model.Trays.Where(t => t.RackId == rack.Id).Where(t => t.Row == rowNumber).Where(t => t.Column == colNumber))
                                                 {
-                                                    var style = "";
-                                                    @if (tray.Eggtype.Name == "Chicken") {
-                                                         style = "azure";
-                                                    } 
-                                                    else if (tray.Eggtype.Name == "Quail")
-                                                        {
-                                                        style = "green";
-                                                    }
                                                     <td>
                                                         <div class="dropdown">
                                                             <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width:80px">
@@ -114,7 +96,7 @@
                                                             <ul class="dropdown-menu" aria-labelledby="devicesMenu">
                                                                 @foreach (var eggtype in Model.EggTypes)
                                                                 {
-                                                                    <li><a href="@Url.Action("ChangeTray", new {trayId = tray.RackContentId, eggTypeId = eggtype.EggTypeId, incubatorId = Model.Incubator.IncubatorId })">@eggtype.Name</a></li>
+                                                                    <li><a href="@Url.Action("ChangeTray", new { trayId = tray.Id, eggTypeId = eggtype.Id, incubatorId = Model.Incubator.Id })">@eggtype.Name</a></li>
                                                                 }
                                                             </ul>
                                                         </div>
@@ -136,3 +118,12 @@
     </div>
 </div>
 
+    }
+
+    else
+    {
+    <h4>
+        Sorry, you havent added any incubators yet, please add in the "My incubators" page.
+    </h4>
+        }
+}

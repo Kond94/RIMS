@@ -55,7 +55,7 @@ namespace RIMS.Controllers
             var incubator = await _context.Incubators
                 .Include(i => i.IncubatorModel)
                 .Include(i => i.MonitoringDevice)
-                .FirstOrDefaultAsync(m => m.IncubatorId == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (incubator == null)
             {
                 return NotFound();
@@ -67,8 +67,8 @@ namespace RIMS.Controllers
         // GET: Incubators/Create
         public IActionResult Create()
         {
-            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "Capacity");
-            ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "MonitoringDeviceId", "Name");
+            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity");
+            ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "Id", "Name");
             return View();
         }
 
@@ -77,7 +77,7 @@ namespace RIMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IncubatorId,IncubatorModelId,MonitoringDeviceId,Name,Description,LastIpAddress,IdentityUserId")] Incubator incubator)
+        public async Task<IActionResult> Create([Bind("IncubatorModelId,MonitoringDeviceId,Id,Name,Description,IdentityUserId")] Incubator incubator)
         {
             incubator.IdentityUser = await GetCurrentUserAsync();
             incubator.IdentityUserId = await GetCurrentUserId();
@@ -87,12 +87,12 @@ namespace RIMS.Controllers
 
                 await _context.SaveChangesAsync();
 
-                incubator = _context.Incubators.Include(i => i.IncubatorModel).SingleOrDefault(i => i.IncubatorId == incubator.IncubatorId);
+                incubator = _context.Incubators.Include(i => i.IncubatorModel).SingleOrDefault(i => i.Id == incubator.Id);
                 for (byte rack = 1; rack <= incubator.IncubatorModel.RackHeight; rack++)
                 {
                     var rackIn = new Rack
                     {
-                        IncubatorId = incubator.IncubatorId,
+                        IncubatorId = incubator.Id,
                         RackNumber = rack,
 
                     };
@@ -104,15 +104,16 @@ namespace RIMS.Controllers
                     {
                         for (byte rackRow = 1; rackRow <= incubator.IncubatorModel.RackWidth; rackRow++)
                         {
-                            var rackContents = new RackContent
+                            var tray = new Tray
                             {
                                 Column = rackCol,
                                 Row = rackRow,
-                                EggTypeId = _context.EggTypes.SingleOrDefault(eT => eT.Name == "None").EggTypeId,
-                                RackId = _context.Racks.Where(r => r.IncubatorId == incubator.IncubatorId).SingleOrDefault(r => r.RackNumber == rack).RackId
+                                EggTypeId = _context.EggTypes.SingleOrDefault(eT => eT.Name == "None").Id,
+                                RackId = _context.Racks.Where(r => r.IncubatorId == incubator.Id).SingleOrDefault(r => r.RackNumber == rack).Id,
+                                DateAdded = DateTime.Now.Date
                             };
 
-                            _context.Add(rackContents);
+                            _context.Add(tray);
                             await _context.SaveChangesAsync();
 
                         }
@@ -124,8 +125,8 @@ namespace RIMS.Controllers
 
             }
 
-            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "Capacity", incubator.IncubatorModelId);
-            ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "MonitoringDeviceId", "Name", incubator.MonitoringDeviceId);
+            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity", incubator.IncubatorModelId);
+            ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "Id", "Name", incubator.MonitoringDeviceId);
             return View(incubator);
         }
 
@@ -142,8 +143,8 @@ namespace RIMS.Controllers
             {
                 return NotFound();
             }
-            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "Capacity", incubator.IncubatorModelId);
-            ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "MonitoringDeviceId", "Name", incubator.MonitoringDeviceId);
+            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity", incubator.IncubatorModelId);
+            ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "Id", "Name", incubator.MonitoringDeviceId);
             return View(incubator);
         }
 
@@ -152,9 +153,11 @@ namespace RIMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IncubatorId,IncubatorModelId,MonitoringDeviceId,Name,Description,LastIpAddress")] Incubator incubator)
+        public async Task<IActionResult> Edit(int id, [Bind("IncubatorModelId,MonitoringDeviceId,Id,Name,Description,IdentityUserId")] Incubator incubator)
         {
-            if (id != incubator.IncubatorId)
+            incubator.IdentityUser = await GetCurrentUserAsync();
+            incubator.IdentityUserId = await GetCurrentUserId();
+            if (id != incubator.Id)
             {
                 return NotFound();
             }
@@ -168,7 +171,7 @@ namespace RIMS.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!IncubatorExists(incubator.IncubatorId))
+                    if (!IncubatorExists(incubator.Id))
                     {
                         return NotFound();
                     }
@@ -179,8 +182,8 @@ namespace RIMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "IncubatorModelId", "Capacity", incubator.IncubatorModelId);
-            ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "MonitoringDeviceId", "Name", incubator.MonitoringDeviceId);
+            ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity", incubator.IncubatorModelId);
+            ViewData["MonitoringDeviceId"] = new SelectList(_context.Set<MonitoringDevice>(), "Id", "Name", incubator.MonitoringDeviceId);
             return View(incubator);
         }
 
@@ -195,7 +198,7 @@ namespace RIMS.Controllers
             var incubator = await _context.Incubators
                 .Include(i => i.IncubatorModel)
                 .Include(i => i.MonitoringDevice)
-                .FirstOrDefaultAsync(m => m.IncubatorId == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (incubator == null)
             {
                 return NotFound();
@@ -217,7 +220,7 @@ namespace RIMS.Controllers
 
         private bool IncubatorExists(int id)
         {
-            return _context.Incubators.Any(e => e.IncubatorId == id);
+            return _context.Incubators.Any(e => e.Id == id);
         }
     }
 }

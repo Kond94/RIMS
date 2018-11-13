@@ -6,6 +6,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.cs" />
+    <Compile Remove="Data\Migrations\00000000000000_CreateIdentitySchema.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181110072448_addIncubatorDbSet.cs" />
+    <Compile Remove="Data\Migrations\20181110072448_addIncubatorDbSet.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181110143613_addUserIdToIncubator.cs" />
+    <Compile Remove="Data\Migrations\20181110143613_addUserIdToIncubator.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181111105309_addDateAddedToRackContent.cs" />
+    <Compile Remove="Data\Migrations\20181111105309_addDateAddedToRackContent.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181112041332_seedDatabase.cs" />
+    <Compile Remove="Data\Migrations\20181112041332_seedDatabase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181112173938_fixRackContentImplementationToTray.cs" />
+    <Compile Remove="Data\Migrations\20181112173938_fixRackContentImplementationToTray.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181113132826_fixTrayDbSet.cs" />
+    <Compile Remove="Data\Migrations\20181113132826_fixTrayDbSet.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.5" PrivateAssets="All" />

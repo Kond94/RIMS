@@ -10,17 +10,13 @@ namespace RIMS.Models
     [Table("IncubatorModels")]
     public class IncubatorModel
     {
-        public int IncubatorModelId { get; set; }
-
+        public int Id { get; set; }
         [Required]
         public int Capacity { get; set; }
-
         [Required]
         public byte RackWidth { get; set; }
-
         [Required]
         public byte RackLength { get; set; }
-
         [Required]
         public byte RackHeight { get; set; }
     }

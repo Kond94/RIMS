@@ -18,7 +18,7 @@
                 <ul class="dropdown-menu" aria-labelledby="devicesMenu">
                     @foreach (var item in Model.Incubators)
                     {
-                        <li><a href="@Url.Action("Index", new {id = item.IncubatorId})">@item.Name</a></li>
+                        <li><a href="@Url.Action("Index", new {id = item.Id})">@item.Name</a></li>
                     }
                 </ul>
             </div>
@@ -43,8 +43,6 @@
 
 @section scripts{
     <script type="text/javascript" src="~/lib/moment.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="~/lib/node_modules/moment/moment.min.js"></script>
 
     <script>
         google.charts.load('current', { 'packages': ['corechart'] });

@@ -9,7 +9,7 @@ namespace RIMS.Models
     [Table("EggTypes")]
     public class EggType
     {
-        public int EggTypeId { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
     }

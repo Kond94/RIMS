@@ -15,7 +15,7 @@ namespace RIMS.Controllers
     [Authorize]
     public class EggManagementController : Controller
     {
-         
+
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
@@ -40,10 +40,12 @@ namespace RIMS.Controllers
         {
             var incubator = new Incubator();
             var userId = await GetCurrentUserId();
+            if (_context.Incubators.Any())
+            {
 
             if (id.HasValue)
             {
-                incubator = _context.Incubators.Include(i => i.IncubatorModel).SingleOrDefault(i => i.IncubatorId == id);
+                incubator = _context.Incubators.Include(i => i.IncubatorModel).SingleOrDefault(i => i.Id == id);
             }
             else
             {
@@ -51,26 +53,36 @@ namespace RIMS.Controllers
 
             }
 
-            var racks = _context.Racks.Where(r => r.IncubatorId == incubator.IncubatorId).ToList();
-            var rackIds = _context.Racks.Where(r => r.IncubatorId == incubator.IncubatorId).Select(r => r.RackId).ToArray();
-            var rackContents = _context.RackContents.Include(rc => rc.Eggtype).Where(rc => rackIds.Contains(rc.RackId)).ToList();
+            var racks = _context.Racks.Where(r => r.IncubatorId == incubator.Id).ToList();
+            var rackIds = _context.Racks.Where(r => r.IncubatorId == incubator.Id).Select(r => r.Id).ToArray();
+            var trays = _context.Trays.Include(rc => rc.Eggtype).Where(rc => rackIds.Contains(rc.RackId)).ToList();
 
             var viewModel = new EggManagementViewModel
             {
                 Incubator = incubator,
                 Racks = racks,
-                RackContents = rackContents,
+                Trays = trays,
                 Incubators = await _context.Incubators.Where(i => i.IdentityUserId == userId).ToListAsync(),
                 EggTypes = await _context.EggTypes.ToListAsync()
 
 
             };
             return View(viewModel);
+            }
+                else
+            {
+                var viewModel = new EggManagementViewModel {
+                Incubator = new Incubator()
+                };
+
+                return View(viewModel);
+
+            }
         }
 
         public IActionResult ChangeTray(int trayId, int eggTypeId, int incubatorId)
         {
-            var tray = _context.RackContents.SingleOrDefault(t => t.RackContentId == trayId);
+            var tray = _context.Trays.SingleOrDefault(t => t.Id == trayId);
 
             tray.EggTypeId = eggTypeId;
 
@@ -80,7 +92,7 @@ namespace RIMS.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("index",incubatorId);
+            return RedirectToAction("index", incubatorId);
         }
     }
 }

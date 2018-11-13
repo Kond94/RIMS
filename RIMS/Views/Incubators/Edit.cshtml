@@ -12,7 +12,7 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IncubatorId" />
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="IncubatorModelId" class="control-label"></label>
                 <select asp-for="IncubatorModelId" class="form-control" asp-items="ViewBag.IncubatorModelId"></select>
@@ -34,9 +34,8 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group" hidden>
-                <label asp-for="LastIpAddress" class="control-label"></label>
-                <input asp-for="LastIpAddress" class="form-control" />
-                <span asp-validation-for="LastIpAddress" class="text-danger"></span>
+                <label asp-for="IdentityUserId" class="control-label"></label>
+                <input asp-for="IdentityUserId" class="form-control" value="Default" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-success" />

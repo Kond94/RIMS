@@ -50,9 +50,9 @@
                     @Html.DisplayFor(modelItem => item.IncubatorModel.Capacity)
                 </td>
                 <td>
-                    <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.IncubatorId">Details</a> |
-                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.IncubatorId">Edit</a> |
-                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.IncubatorId">Delete</a>
+                    <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
