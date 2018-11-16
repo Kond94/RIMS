@@ -4,85 +4,114 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>View</h2>
-<div class="row">
-    <div class="col-sm-3">
+<h2>Incubator State</h2>
+@{
+    if (Model.Incubator.Id != 0)
+    {
+        <div class="row">
+            <div class="col-sm-3">
 
-        <div class="form-group" style="margin-bottom: 20px">
-            <label for="devicesMenu">Incubator:</label>
-            <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 185px">
-                    @Model.Incubator.Name
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="devicesMenu">
-                    @foreach (var item in Model.Incubators)
-                    {
-                        <li><a href="@Url.Action("Index", new {id = item.Id})">@item.Name</a></li>
-                    }
-                </ul>
+                <div class="form-group" style="margin-bottom: 20px">
+                    <label for="devicesMenu">Incubator:</label>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 140px">
+                            @Model.Incubator.Name
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="devicesMenu">
+                            @foreach (var item in Model.Incubators)
+                            {
+                                <li><a href="@Url.Action("Index", new { id = item.Id })">@item.Name</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <hr />
+                </div>
+
+
+                <div class="form-group">
+                    <label><a style="text-decoration:solid; color:red">LIVE</a> Measurements:</label><br />
+
+                    <div id="tempreture" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">@Model.RecentMeasurements.Temperature&deg;</div>
+
+                    <div class="dropdown">
+                        <div id="humidity" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">@Model.RecentMeasurements.Humidity%</div>
+                    </div>
+                    <span id="measuredDate" style="font-style: italic">As of: @Model.RecentMeasurements.MeasuredDate.ToString("dd-MMM-yyyy") - @Model.RecentMeasurements.MeasuredDate.ToShortTimeString()</span>
+                    <hr />
+                </div>
+                <div>
+                    <h4>Estimated Yeild</h4>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <canvas id="myChart" width="400" height="200"></canvas>
             </div>
         </div>
 
 
-        <div class="form-group">
-            <label>Last measurements:</label><br />
-            <div class="dropdown">
-                <div class="alert alert-info" style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">X&deg; Celcius</div>
-            </div>
-            <div class="dropdown">
-                <div class="alert alert-info" style="width: 185px; margin-bottom: 15px; padding: 5px; text-align: center">X% Humidity</div>
-            </div>
-            <span style="font-style: italic">As of:</span>
-        </div>
-    </div>
-    <div class="col-sm-9">
-        <div id="chart1"></div>
-    </div>
-</div>
+        @section scripts{
+            <script src="~/lib/Chart.min.js"></script>
 
-@section scripts{
-    <script type="text/javascript" src="~/lib/moment.js"></script>
+            @{ 
 
-    <script>
-        google.charts.load('current', { 'packages': ['corechart'] });
-        google.charts.setOnLoadCallback(callback);
+                    string[] dateLabels = new string[] {
+                    DateTime.Now.AddDays(-25).ToString("dd-MMM-yyyy"),
+                    DateTime.Now.AddDays(-20).ToString("dd-MMM-yyyy"),
+                    DateTime.Now.AddDays(-15).ToString("dd-MMM-yyyy"),
+                    DateTime.Now.AddDays(-10).ToString("dd-MMM-yyyy"),
+                    DateTime.Now.AddDays(-5).ToString("dd-MMM-yyyy"),
+                    DateTime.Now.ToString("dd-MMM-yyyy")
 
-        function callback() {
-            var option = {
-                title: "Real-Time Chart",
-                width: 900,
-                height: 400,
-                legend: { position: 'none' },
-                vAxis: { viewWindow: { min: -1, max: 11 }, baselineColor: 'transparent' },
-                chartArea: {
-                    height: '100%', width: '100%', left: 100,
-                    backgroundColor: { stroke: "gray", strokeWidth: 1 }
-                },
-                pointSize: 10
             };
-            var chart = new google.visualization.LineChart(document.getElementById('chart1'));
-            var data = new google.visualization.DataTable();
-            data.addColumn('datetime', 'TimeStamp');
-            data.addColumn('number', 'Value');
-
-            drawChart();
-            setInterval(drawChart, 1000);
-
-            function drawChart() {
-                $.get('Dashboard/GetRealTimeData', function (d) {
-                    var timeStamp = new Date(d.timeStamp);
-                    var time = { v: timeStamp, f: moment(timeStamp).format('HH:mm:ss') };
-                    var val = d.dataValue;
-                    data.addRow([time, val]);
-                    if (data.getNumberOfRows() > 20) {
-                        data.removeRow(0);
-                    }
-                    chart.draw(data, option);
-                });
             }
+            <script>
+var ctx = document.getElementById("myChart").getContext('2d');
+
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+
+                        labels: ["@dateLabels[0]", "@dateLabels[1]", "@dateLabels[2]", "@dateLabels[3]", "@dateLabels[4]", "@dateLabels[5]" ],
+                        datasets: [
+                            {
+                                label: 'Tempreture',
+                                data: [@Model.TempretureMeasurements[0],@Model.TempretureMeasurements[1],@Model.TempretureMeasurements[2],@Model.TempretureMeasurements[3],@Model.TempretureMeasurements[4],@Model.TempretureMeasurements[5],@Model.TempretureMeasurements[6]],
+                                fill: false,
+                                borderWidth: 1,
+                                borderColor: '#36a2eb',
+                                pointStyle: 'crossRot',
+                            },
+                            {
+                                label: 'Humidity',
+                                data: [@Model.HumidityMeasurements[0],@Model.HumidityMeasurements[1],@Model.HumidityMeasurements[2],@Model.HumidityMeasurements[3],@Model.HumidityMeasurements[4],@Model.HumidityMeasurements[5],@Model.HumidityMeasurements[6]],
+                                fill: false,
+                                borderWidth: 1,
+                                borderColor: '#cc65fe',
+                                pointStyle: 'star'
+                            }
+                         ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
         }
-    </script>
+    }
+    });
+            </script>
+        }
+
+    }
+    else
+    {
+        <h4>
+            Sorry, you havent added any incubators yet, please add in the "My incubators" page.
+        </h4>
+    }
 }
 
 

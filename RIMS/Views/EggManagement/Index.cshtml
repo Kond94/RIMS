@@ -5,13 +5,28 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@{  
+    var changesDetected = false;
+    DateTime[] dates = new DateTime[] { };
+    var index = 0;
+    var hidden = "hidden";
+    string[] ColourValues = new string[] {
+        "burlywood", "aqua", "yellow", "pink", "lightgreen", "azure",
+        "crimson", "goldenrod", "honeydew", "indianred", "ivory",
+        "khaki", "lightsalmon", "linen", "wheat", "stateblue", "orange",
+        "burlywood", "aqua", "yellow", "pink", "lightgreen", "azure",
+        "crimson", "goldenrod", "honeydew", "indianred", "ivory",
+        "khaki", "lightsalmon", "linen", "wheat", "stateblue", "orange"
+
+    };
+}
 
 <h2>Egg Management</h2>
 <hr />
 @{ if (Model.Incubator.Id != 0)
     {
-        <div class="row">
-            <div class="col-sm-3">
+        <div class="row" style="background-color:">
+            <div class="col-sm-4">
 
                 <div class="form-group" style="margin-bottom: 20px">
                     <h4>Incubator:</h4>
@@ -27,20 +42,81 @@
                             }
                         </ul>
                     </div>
-                    <hr />
-                    <div>
-                        <button class="btn btn-success" type="button">
-                            <span class="glyphicon glyphicon-calendar"></span>
 
-                            View Hatching Calender
-                        </button>
-                    </div>
                 </div>
-                <h4> Upcoming Dates:</h4>
-                <hr />
+                <h4> Upcoming Dates: 
+                    <a href="@Url.Action("Index", new { id = Model.Incubator.Id })" class="btn btn-sm btn-success">
+                        Refresh
+                    </a>
+                </h4>
+                <hr /> 
+                
+                <table class="table table-condensed table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                            <th>
+                                Tray Color
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var calenderGroup in Model.CandlingTrays)
+                        {
 
+                            <tr>
+                                <td>
+                                    @calenderGroup.ActionDate.ToString("dd-MMM-yyyy")
+                                </td>
+                                <td>
+                                    Candling
+                                </td>
+                                <td style="background-color:@ColourValues[index]"></td>
+                            </tr>
+                            calenderGroup.Id = index;
+                            index++;
+                        }
+
+                        @foreach (var calenderGroup in Model.HatchPreparationTrays)
+                        {
+
+                            <tr>
+                                <td>
+                                    @calenderGroup.ActionDate.ToString("dd-MMM-yyyy")
+                                </td>
+                                <td>
+                                    Hatch Preparation
+                                </td>
+                                <td style="background-color:@ColourValues[index]"></td>
+                            </tr>
+                            calenderGroup.Id = index;
+                            index++;
+                        }
+
+                        @foreach (var calenderGroup in Model.HatchTrays)
+                        {
+
+                            <tr>
+                                <td>
+                                    @calenderGroup.ActionDate.ToString("dd-MMM-yyyy")
+                                </td>
+                                <td>
+                                    Hatching
+                                </td>
+                                <td style="background-color:@ColourValues[index]"></td>
+                            </tr>
+                            calenderGroup.Id = index;
+                            index++;
+                        }
+                    </tbody>
+                </table>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-8">
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -88,9 +164,10 @@
 
                                                         @foreach (var tray in Model.Trays.Where(t => t.RackId == rack.Id).Where(t => t.Row == rowNumber).Where(t => t.Column == colNumber))
                                                         {
+
                                                             <td>
                                                                 <div class="dropdown">
-                                                                    <button id="@tray.Id" class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="width:80px">
+                                                                    <button id="@tray.Id" @{ var style = "";  foreach (var group in Model.CandlingTrays) { if (group.TrayIds.Contains(tray.Id)) { style = ColourValues[group.Id]; } } foreach (var group in Model.HatchPreparationTrays) { if (group.TrayIds.Contains(tray.Id)) { style = ColourValues[group.Id]; } } foreach (var group in Model.HatchTrays) { if (group.TrayIds.Contains(tray.Id)) { style = ColourValues[group.Id]; } }} style="background-color:@style" class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" ifyle="width:80px">
                                                                         @tray.Eggtype.Name
                                                                         <span class="caret"></span>
                                                                     </button>
@@ -131,10 +208,11 @@
         </h4>
     }
 }
-@*href="@Url.Action("ChangeTray", new { trayId = tray.Id, eggtypeId = eggtype.Id, IncubatorId = Model.Incubator.Id })"*@
 @section scripts{
     <script>
-            function loadDoc(trayId, eggTypeId, IncubatorId) {
+        function loadDoc(trayId, eggTypeId, IncubatorId) {
+            document.getElementById(changesDetected).style.visibility = "visible";
+
                 var url = "@Url.Action("ChangeTray").ToString()" + "?trayId=" + trayId + "&eggtypeId=" + eggTypeId + "&incubatorId=" + IncubatorId;
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
@@ -144,6 +222,8 @@
                 };
                 xhttp.open("GET", url, true);
                 xhttp.send();
+
+                
             }
     </script>
 }

@@ -19,5 +19,6 @@ namespace RIMS.Data
         public DbSet<Rack> Racks { get; set; }
         public DbSet<EggType> EggTypes { get; set; }
         public DbSet<Tray> Trays { get; set; }
+        public DbSet<MonitoringDevice> MonitoringDevices { get; set; }
     }
 }

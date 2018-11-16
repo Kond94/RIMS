@@ -14,6 +14,10 @@ namespace RIMS.Models.ViewModels
             Racks = new Collection<Rack>();
             EggTypes = new Collection<EggType>();
             Trays = new Collection<Tray>();
+            CandlingTrays = new Collection<ActionGroup>();
+            HatchPreparationTrays = new Collection<ActionGroup>();
+            HatchTrays = new Collection<ActionGroup>();
+
 
         }
         public Incubator Incubator { get; set; }
@@ -22,5 +26,9 @@ namespace RIMS.Models.ViewModels
         public ICollection<Rack> Racks { get; set; }
         public ICollection<EggType> EggTypes { get; set; }
         public ICollection<Tray> Trays { get; set; }
+        public ICollection<ActionGroup> CandlingTrays { get; set; }
+        public ICollection<ActionGroup> HatchPreparationTrays { get; set; }
+        public ICollection<ActionGroup> HatchTrays { get; set; }
+
     }
 }

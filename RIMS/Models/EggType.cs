@@ -12,5 +12,21 @@ namespace RIMS.Models
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public byte CandlingDays { get; set; }
+
+        public byte HatchPreparationDays { get; set; }
+
+        public byte HatchDays { get; set; }
+    }
+
+    public enum EggTypes : int
+    {
+        None = 1,
+        Quail = 2,
+        Chicken = 3,
+        Duck = 4,
+        Turkey = 5,
+        Guinea_Fowl = 6       
     }
 }

@@ -10,8 +10,8 @@ using RIMS.Data;
 namespace RIMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181112183203_createModelContext")]
-    partial class createModelContext
+    [Migration("20181116010245_seedContextWithPrimaryData")]
+    partial class seedContextWithPrimaryData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -192,6 +192,12 @@ namespace RIMS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<byte>("CandlingDays");
+
+                    b.Property<byte>("HatchDays");
+
+                    b.Property<byte>("HatchPreparationDays");
+
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
@@ -298,6 +304,8 @@ namespace RIMS.Migrations
 
                     b.Property<string>("Description")
                         .HasMaxLength(500);
+
+                    b.Property<string>("Indentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()

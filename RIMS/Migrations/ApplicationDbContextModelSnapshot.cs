@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RIMS.Data;
 
 namespace RIMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181112183343_seedDatabaseWithPrimaryData")]
-    partial class seedDatabaseWithPrimaryData
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -192,6 +190,12 @@ namespace RIMS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<byte>("CandlingDays");
+
+                    b.Property<byte>("HatchDays");
+
+                    b.Property<byte>("HatchPreparationDays");
+
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
@@ -298,6 +302,8 @@ namespace RIMS.Migrations
 
                     b.Property<string>("Description")
                         .HasMaxLength(500);
+
+                    b.Property<string>("Indentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()

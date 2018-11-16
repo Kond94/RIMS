@@ -23,7 +23,7 @@ namespace RIMS.Models
     }
 
 
-    public enum MeasureTypes
+    public enum MeasurementTypesEnum : int
     {
         Temperature = 1,
         Humidity = 2

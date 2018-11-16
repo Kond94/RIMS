@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -56,16 +57,56 @@ namespace RIMS.Controllers
             var racks = _context.Racks.Where(r => r.IncubatorId == incubator.Id).ToList();
             var rackIds = _context.Racks.Where(r => r.IncubatorId == incubator.Id).Select(r => r.Id).ToArray();
             var trays = _context.Trays.Include(rc => rc.Eggtype).Where(rc => rackIds.Contains(rc.RackId)).ToList();
+            var candlingDates = _context.Trays.Where(t => t.Rack.IncubatorId == incubator.Id).Where(t => t.EggTypeId != 1).Where(t => t.CandlingDate > DateTime.Now.Date).GroupBy(t => t.CandlingDate).Select(t => t.Key).ToList();
+            var hatchPreparationDates = _context.Trays.Where(t => t.Rack.IncubatorId == incubator.Id).Where(t => t.EggTypeId != 1).Where(t => t.CandlingDate < DateTime.Now.Date && t.HatchPreparationDate >= DateTime.Now.Date).GroupBy(t => t.HatchPreparationDate).Select(t => t.Key).ToList();
+            var HatchDates = _context.Trays.Where(t => t.Rack.IncubatorId == incubator.Id).Where(t => t.EggTypeId != 1).Where(t => t.HatchPreparationDate < DateTime.Now.Date && t.HatchDate >= DateTime.Now.Date).GroupBy(t => t.HatchDate).Select(t => t.Key).ToList();
 
-            var viewModel = new EggManagementViewModel
+            var candlingTrays = new Collection<ActionGroup>();
+            var hatchPreparationTrays = new Collection<ActionGroup>();
+            var hatchTrays = new Collection<ActionGroup>();
+
+                foreach (var candlingDate in candlingDates)
+                {
+                    var candlingGroup = new ActionGroup()
+                    {
+                        TrayIds = _context.Trays.Where(t => t.Rack.IncubatorId == incubator.Id).Where(t => t.EggTypeId != 1).Where(t => t.CandlingDate == candlingDate).Select(t => t.Id).ToArray(),
+                        ActionDate = candlingDate
+                    };
+
+                    candlingTrays.Add(candlingGroup);
+                }
+
+                foreach (var hatchPreparationDate in hatchPreparationDates)
+                {
+                    var hatchPreparationGroup = new ActionGroup()
+                    {
+                        TrayIds = _context.Trays.Where(t => t.Rack.IncubatorId == incubator.Id).Where(t => t.EggTypeId != 1).Where(t => t.HatchPreparationDate == hatchPreparationDate).Select(t => t.Id).ToArray(),
+                        ActionDate = hatchPreparationDate
+                    };
+
+                    hatchPreparationTrays.Add(hatchPreparationGroup);
+                }
+
+                foreach (var hatchDate in HatchDates)
+                {
+                    var hatchGroup = new ActionGroup()
+                    {
+                        TrayIds = _context.Trays.Where(t => t.Rack.IncubatorId == incubator.Id).Where(t => t.EggTypeId != 1).Where(t => t.HatchDate == hatchDate).Select(t => t.Id).ToArray(),
+                        ActionDate = hatchDate
+                    };
+
+                    hatchTrays.Add(hatchGroup);
+                }
+                var viewModel = new EggManagementViewModel
             {
                 Incubator = incubator,
                 Racks = racks,
                 Trays = trays,
                 Incubators = await _context.Incubators.Where(i => i.IdentityUserId == userId).ToListAsync(),
-                EggTypes = await _context.EggTypes.ToListAsync()
-
-
+                EggTypes = await _context.EggTypes.ToListAsync(),
+                CandlingTrays = candlingTrays,
+                HatchPreparationTrays = hatchPreparationTrays,
+                HatchTrays = hatchTrays
             };
             return View(viewModel);
             }
@@ -82,12 +123,23 @@ namespace RIMS.Controllers
 
         public IActionResult ChangeTray(int trayId, int eggTypeId, int incubatorId)
         {
-            var tray = _context.Trays.SingleOrDefault(t => t.Id == trayId);
+            var tray = _context.Trays.Include(t => t.Eggtype).SingleOrDefault(t => t.Id == trayId);
 
             tray.EggTypeId = eggTypeId;
 
+            _context.Update(tray);
+            _context.SaveChanges();
+
+
+            tray = _context.Trays.Include(t => t.Eggtype).SingleOrDefault(t => t.Id == trayId);
+
+
             tray.DateAdded = DateTime.Today.Date;
 
+            tray.CandlingDate = tray.DateAdded.AddDays(tray.Eggtype.CandlingDays);
+            tray.HatchPreparationDate = tray.DateAdded.AddDays(tray.Eggtype.HatchPreparationDays);
+            tray.HatchDate = tray.DateAdded.AddDays(tray.Eggtype.HatchDays);
+            
             _context.Update(tray);
 
             _context.SaveChanges();
@@ -96,5 +148,7 @@ namespace RIMS.Controllers
 
             return Ok(tray.Eggtype.Name);
         }
+
+  
     }
 }

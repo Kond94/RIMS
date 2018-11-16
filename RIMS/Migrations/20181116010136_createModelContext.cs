@@ -53,7 +53,10 @@ namespace RIMS.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    CandlingDays = table.Column<byte>(nullable: false),
+                    HatchPreparationDays = table.Column<byte>(nullable: false),
+                    HatchDays = table.Column<byte>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,7 +100,8 @@ namespace RIMS.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 255, nullable: false),
-                    Description = table.Column<string>(maxLength: 500, nullable: true)
+                    Description = table.Column<string>(maxLength: 500, nullable: true),
+                    Indentifier = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

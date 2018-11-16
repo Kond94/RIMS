@@ -83,6 +83,8 @@ namespace RIMS.Controllers
             incubator.IdentityUserId = await GetCurrentUserId();
             if (ModelState.IsValid)
             {
+                var dateAdded = DateTime.Now.Date;
+
                 _context.Add(incubator);
 
                 await _context.SaveChangesAsync();
@@ -110,7 +112,10 @@ namespace RIMS.Controllers
                                 Row = rackRow,
                                 EggTypeId = _context.EggTypes.SingleOrDefault(eT => eT.Name == "None").Id,
                                 RackId = _context.Racks.Where(r => r.IncubatorId == incubator.Id).SingleOrDefault(r => r.RackNumber == rack).Id,
-                                DateAdded = DateTime.Now.Date
+                                DateAdded = DateTime.Now.Date,
+                                CandlingDate = DateTime.Now.Date,
+                                HatchPreparationDate = DateTime.Now.Date,
+                                HatchDate = DateTime.Now.Date
                             };
 
                             _context.Add(tray);

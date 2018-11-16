@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -18,8 +18,18 @@
     <Compile Remove="Data\Migrations\20181112041332_seedDatabase.Designer.cs" />
     <Compile Remove="Data\Migrations\20181112173938_fixRackContentImplementationToTray.cs" />
     <Compile Remove="Data\Migrations\20181112173938_fixRackContentImplementationToTray.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181112183203_createModelContext.cs" />
+    <Compile Remove="Data\Migrations\20181112183203_createModelContext.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181112183343_seedDatabaseWithPrimaryData.cs" />
+    <Compile Remove="Data\Migrations\20181112183343_seedDatabaseWithPrimaryData.Designer.cs" />
     <Compile Remove="Data\Migrations\20181113132826_fixTrayDbSet.cs" />
     <Compile Remove="Data\Migrations\20181113132826_fixTrayDbSet.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181115070431_addhatchcalenderdays.cs" />
+    <Compile Remove="Data\Migrations\20181115070431_addhatchcalenderdays.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181116003744_addMonitoringdeviceIdentifier.cs" />
+    <Compile Remove="Data\Migrations\20181116003744_addMonitoringdeviceIdentifier.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181116003919_seedExtraAddedFields.cs" />
+    <Compile Remove="Data\Migrations\20181116003919_seedExtraAddedFields.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +41,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Services\" />
+    <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
 </Project>

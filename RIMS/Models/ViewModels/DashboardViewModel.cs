@@ -11,14 +11,21 @@ namespace RIMS.Models.ViewModels
         public DashboardViewModel()
         {
             Incubators = new Collection<Incubator>();
-            Measurements = new Collection<Measurement>();
+            TempretureMeasurements = new decimal[] { };
+            HumidityMeasurements = new decimal[] { };
         }
         public Incubator Incubator { get; set; }
         public ICollection<Incubator> Incubators { get; set; }
 
-        public ICollection<Measurement> Measurements { get; set; }
+
+        public RecentMeasurements RecentMeasurements { get; set; }
 
         public DateTime TimeStamp { get; set; }
         public double DataValue { get; set; }
+
+        public decimal[] TempretureMeasurements { get; set; }
+        public decimal[] HumidityMeasurements { get; set; }
+
+
     }
 }
