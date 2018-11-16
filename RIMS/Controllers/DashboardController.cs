@@ -48,7 +48,11 @@ namespace RIMS.Controllers
                 if (!id.HasValue)
                 {
                     var incubator = incubators.First();
-                    var temperatureMeasurements = new decimal[] {
+                    var measurements = _context.Measurements.Take(3).Where(m => m.IncubatorId == incubator.Id);
+
+                    if (measurements.Any())
+                    {
+                        var temperatureMeasurements = new decimal[] {
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).Average(),
@@ -57,7 +61,7 @@ namespace RIMS.Controllers
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).Average()
                 };
-                    var humidityMeasurements = new decimal[] {
+                        var humidityMeasurements = new decimal[] {
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).Average(),
@@ -66,21 +70,38 @@ namespace RIMS.Controllers
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).Average()
                 };
-                    var viewModel = new DashboardViewModel
+                        var viewModel = new DashboardViewModel
+                        {
+                            Incubator = incubator,
+                            Incubators = incubators,
+                            TempretureMeasurements = temperatureMeasurements,
+                            HumidityMeasurements = humidityMeasurements,
+                            RecentMeasurements = MostRecentMeasurements(incubator.Id)
+                        };
+                        return View(viewModel);
+                    }
+                    else
                     {
-                        Incubator = incubator,
-                        Incubators = incubators,
-                        TempretureMeasurements = temperatureMeasurements,
-                        HumidityMeasurements = humidityMeasurements,
-                        RecentMeasurements = MostRecentMeasurements(incubator.Id)
-                    };
-                    return View(viewModel);
-
+                        var temperatureMeasurements = new decimal[] { 0, 0, 0, 0, 0, 0, 0 };
+                        var humidityMeasurements = new decimal[]  { 0, 0, 0, 0, 0, 0, 0 };
+                        var viewModel = new DashboardViewModel {
+                            Incubator = incubator,
+                            Incubators = incubators,
+                            HumidityMeasurements = humidityMeasurements,
+                            TempretureMeasurements = temperatureMeasurements,
+                            RecentMeasurements = MostRecentMeasurements(incubator.Id)
+                        };
+                        return View(viewModel);
+                    }
                 }
                 else
                 {
                     var incubator = incubators.SingleOrDefault(i => i.Id == id);
-                    var temperatureMeasurements = new decimal[] {
+                    var measurements = _context.Measurements.Take(3).Where(m => m.IncubatorId == incubator.Id);
+
+                    if (measurements.Any())
+                    {
+                        var temperatureMeasurements = new decimal[] {
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).Average(),
@@ -89,7 +110,7 @@ namespace RIMS.Controllers
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).Average()
                 };
-                    var humidityMeasurements = new decimal[] {
+                        var humidityMeasurements = new decimal[] {
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).Average(),
@@ -98,17 +119,30 @@ namespace RIMS.Controllers
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).Average(),
                     _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).Average()
                 };
-                    var viewModel = new DashboardViewModel
+                        var viewModel = new DashboardViewModel
+                        {
+                            Incubator = incubator,
+                            Incubators = incubators,
+                            TempretureMeasurements = temperatureMeasurements,
+                            HumidityMeasurements = humidityMeasurements,
+                            RecentMeasurements = MostRecentMeasurements(incubator.Id)
+                        };
+                        return View(viewModel);
+                    }
+                    else
                     {
-                        Incubator = incubator,
-                        Incubators = incubators,
-                        TempretureMeasurements = temperatureMeasurements,
-                        HumidityMeasurements = humidityMeasurements,
-                        RecentMeasurements = MostRecentMeasurements(incubator.Id)
-                    };
-
-                    return View(viewModel);
-
+                        var temperatureMeasurements = new decimal[] { 0, 0, 0, 0, 0, 0, 0 };
+                        var humidityMeasurements = new decimal[] { 0, 0, 0, 0, 0, 0, 0 };
+                        var viewModel = new DashboardViewModel
+                        {
+                            Incubator = incubator,
+                            Incubators = incubators,
+                            HumidityMeasurements = humidityMeasurements,
+                            TempretureMeasurements = temperatureMeasurements,
+                            RecentMeasurements = MostRecentMeasurements(incubator.Id)
+                        };
+                        return View(viewModel);
+                    }
                 }
             }
             else

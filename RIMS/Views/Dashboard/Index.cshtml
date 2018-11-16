@@ -9,7 +9,7 @@
     if (Model.Incubator.Id != 0)
     {
         <div class="row">
-            <div class="col-sm-3">
+            <div class="col-sm-3" style="background-color:ghostwhite">
 
                 <div class="form-group" style="margin-bottom: 20px">
                     <label for="devicesMenu">Incubator:</label>
@@ -28,7 +28,8 @@
                     <hr />
                 </div>
 
-
+                @{ if (Model.RecentMeasurements.Temperature != null)
+                    {
                 <div class="form-group">
                     <label><a style="text-decoration:solid; color:red">LIVE</a> Measurements:</label><br />
 
@@ -40,11 +41,26 @@
                     <span id="measuredDate" style="font-style: italic">As of: @Model.RecentMeasurements.MeasuredDate.ToString("dd-MMM-yyyy") - @Model.RecentMeasurements.MeasuredDate.ToShortTimeString()</span>
                     <hr />
                 </div>
+                    }
+                    else
+                    {
+                <div class="form-group">
+                    <label><a style="text-decoration:solid; color:red">LIVE</a> Measurements:</label><br />
+
+                    <div id="tempreture" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">N/A</div>
+
+                    <div class="dropdown">
+                        <div id="humidity" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">N/A</div>
+                    </div>
+                    <hr />
+                </div>
+                    }
+                    }
                 <div>
                     <h4>Estimated Yeild</h4>
                 </div>
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-9" style="background-color:ghostwhite">
                 <canvas id="myChart" width="400" height="200"></canvas>
             </div>
         </div>
