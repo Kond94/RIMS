@@ -37,7 +37,6 @@ body {
 }
 
 body {
-    background-image: url("../images/leaves-pattern.png");
     background-repeat: round;
     filter: blur(0.1px);
 }

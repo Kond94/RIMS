@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using RIMS.Models.ViewModels;
 
 namespace RIMS.Controllers
 {
+    [EnableCors("AllowAllOrigins")]
     [Authorize]
     public class DashboardController : Controller
     {
@@ -48,27 +50,27 @@ namespace RIMS.Controllers
                 if (!id.HasValue)
                 {
                     var incubator = incubators.First();
-                    var measurements = _context.Measurements.Take(3).Where(m => m.IncubatorId == incubator.Id);
+                    var measurements = _context.Measurements.Take(1).Where(m => m.IncubatorId == incubator.Id);
 
                     if (measurements.Any())
                     {
                         var temperatureMeasurements = new decimal[] {
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-20) && m.MeasuredDate < DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-15) && m.MeasuredDate < DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).Average()
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-20) && m.MeasuredDate < DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-15) && m.MeasuredDate < DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
                 };
                         var humidityMeasurements = new decimal[] {
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-20) && m.MeasuredDate < DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-15) && m.MeasuredDate < DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).Average()
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-20) && m.MeasuredDate < DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-15) && m.MeasuredDate < DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
                 };
                         var viewModel = new DashboardViewModel
                         {
@@ -194,15 +196,16 @@ namespace RIMS.Controllers
 
             return recent;
         }
-
-        public ActionResult PostData(string id, decimal? temp, decimal? light)
+        [EnableCors("AllowAllOrigins")]
+        [AllowAnonymous]
+        public ActionResult PostData(int id, decimal? temp, decimal? light)
         {
             var results = "Success";
             var reported = DateTime.Now;
 
             try
             {
-                var monitoringDevice = _context.MonitoringDevices.SingleOrDefault(mD => mD.Indentifier == id);
+                var monitoringDevice = _context.MonitoringDevices.SingleOrDefault(mD => mD.Id == id);
 
                 if (monitoringDevice == null)
                 {
@@ -218,7 +221,7 @@ namespace RIMS.Controllers
                         _context.Measurements.Add(new Measurement
                         {
                             MeasurementTypeId = (int)MeasurementTypesEnum.Temperature,
-                            IncubatorId = 13,
+                            IncubatorId = _context.Incubators.SingleOrDefault(i => i.MonitoringDeviceId == id).Id,
                             MeasuredValue = temp.Value,
                             MeasuredDate = reported
                         });
