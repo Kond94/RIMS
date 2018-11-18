@@ -6,10 +6,8 @@
 }
 
 @{  
-    var changesDetected = false;
-    DateTime[] dates = new DateTime[] { };
+  
     var index = 0;
-    var hidden = "hidden";
     string[] ColourValues = new string[] {
         "burlywood", "aqua", "yellow", "pink", "lightgreen", "azure",
         "crimson", "goldenrod", "honeydew", "indianred", "ivory",
@@ -22,16 +20,20 @@
 }
 
 <h2>Egg Management</h2>
-<hr />
 @{ if (Model.Incubator.Id != 0)
     {
         <div class="row" style="background-color:ghostwhite">
-            <div class="col-sm-4">
 
+            <div class="col-sm-4">
+                <br />
+                <div class="well well-sm">
+                    <h3>Settings</h3>
+                </div>
+                <hr >
                 <div class="form-group" style="margin-bottom: 20px">
                     <h4>Incubator:</h4>
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 185px">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 140px">
                             @Model.Incubator.Name
                             <span class="caret"></span>
                         </button>
@@ -44,14 +46,15 @@
                     </div>
 
                 </div>
-                <h4> Upcoming Dates: 
+                <h4>
+                    Upcoming Dates:
                     <a href="@Url.Action("Index", new { id = Model.Incubator.Id })" class="btn btn-sm btn-success">
                         Refresh
                     </a>
                 </h4>
-                <hr /> 
-                
-                <table class="table table-condensed table-striped table-bordered table-hover table-bordered">
+                <hr />
+
+                <table class="table table-striped table-bordered table-hover table-bordered">
                     <thead>
                         <tr>
                             <th>
@@ -116,7 +119,16 @@
                     </tbody>
                 </table>
             </div>
+
+
             <div class="col-sm-8">
+                <br />
+
+                <div class="well well-sm">
+
+                    <h3>@Model.Incubator.Name</h3>
+                </div>
+                <hr />
                 <table class="table table-condensed table-striped table-hover">
                     <thead>
                         <tr>
@@ -132,7 +144,7 @@
                     <tbody>
                         @foreach (var rack in Model.Racks)
                         {
-                            <tr>
+                            <tr class="warning">
                                 <td>
                                     @Html.DisplayFor(modelItem => rack.RackNumber)
                                 </td>
@@ -157,7 +169,7 @@
 
                                             @for (var rowNumber = 1; rowNumber <= Model.Incubator.IncubatorModel.RackWidth; rowNumber++)
                                             {
-                                                <tr>
+                                                <tr style="background-color:ghostwhite">
                                                     <td>@rowNumber</td>
                                                     @for (var colNumber = 1; colNumber <= Model.Incubator.IncubatorModel.RackLength; colNumber++)
                                                     {
@@ -167,7 +179,7 @@
 
                                                             <td>
                                                                 <div class="dropdown">
-                                                                    <button onclick="loadDoc(@tray.Id,@tray.EggTypeId,@rack.IncubatorId)" id="@tray.Id" @{ var style = "";  foreach (var group in Model.CandlingTrays) { if (group.TrayIds.Contains(tray.Id)) { style = ColourValues[group.Id]; } } foreach (var group in Model.HatchPreparationTrays) { if (group.TrayIds.Contains(tray.Id)) { style = ColourValues[group.Id]; } } foreach (var group in Model.HatchTrays) { if (group.TrayIds.Contains(tray.Id)) { style = ColourValues[group.Id]; } }} style="background-color:@style" class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" ifyle="width:80px">
+                                                                    <button onclick="loadDoc(@tray.Id,@tray.EggTypeId,@rack.IncubatorId)" id="@tray.Id" @{ var style = ""; foreach (var group in Model.CandlingTrays) { if (group.TrayIds.Contains(tray.Id)) { style = ColourValues[group.Id]; } } foreach (var group in Model.HatchPreparationTrays) { if (group.TrayIds.Contains(tray.Id)) { style = ColourValues[group.Id]; } } foreach (var group in Model.HatchTrays) { if (group.TrayIds.Contains(tray.Id)) { style = ColourValues[group.Id]; } }} style="background-color:@style" class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown" ifyle="width:80px">
                                                                         @tray.Eggtype.Name
                                                                         <span class="caret"></span>
                                                                     </button>

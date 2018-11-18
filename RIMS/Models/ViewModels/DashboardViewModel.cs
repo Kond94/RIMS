@@ -20,11 +20,10 @@ namespace RIMS.Models.ViewModels
 
         public RecentMeasurements RecentMeasurements { get; set; }
 
-        public DateTime TimeStamp { get; set; }
-        public double DataValue { get; set; }
-
         public decimal[] TempretureMeasurements { get; set; }
         public decimal[] HumidityMeasurements { get; set; }
+        public string[] Labels { get; set; }
+        public string TimeFrame { get; set; }
 
 
     }

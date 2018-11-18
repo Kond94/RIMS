@@ -22,9 +22,9 @@ namespace RIMS.Models
         public string IdentityUserId { get; set; }
         public IdentityUser IdentityUser { get; set; }
         [Required]
-        [Display(Name ="Capacity (Eggs)")]
+        [Display(Name ="Incubator Capacity (Eggs)")]
         public int IncubatorModelId { get; set; }
-        [Display(Name = "Capacity (Eggs)")]
+        [Display(Name = "Incubator Capacity (Eggs)")]
         public virtual IncubatorModel IncubatorModel { get; set; }
         [Required]
         [Display(Name = "Monitoring Device")]

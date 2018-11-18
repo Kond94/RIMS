@@ -41,7 +41,7 @@ namespace RIMS.Controllers
         {
             var incubator = new Incubator();
             var userId = await GetCurrentUserId();
-            if (_context.Incubators.Any())
+            if (_context.Incubators.Where(i => i.IdentityUserId == userId).Any())
             {
 
             if (id.HasValue)
@@ -50,8 +50,7 @@ namespace RIMS.Controllers
             }
             else
             {
-                incubator = _context.Incubators.Include(i => i.IncubatorModel).First();
-
+                incubator = _context.Incubators.Include(i => i.IncubatorModel).Where(i => i.IdentityUserId == userId).First();
             }
 
             var racks = _context.Racks.Where(r => r.IncubatorId == incubator.Id).ToList();

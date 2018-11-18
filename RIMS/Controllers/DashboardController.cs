@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -37,114 +38,61 @@ namespace RIMS.Controllers
 
         private Task<IdentityUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(int? IncubatorId, string graphTimeFrame)
         {
-            if (_context.Incubators.Any())
+            if (graphTimeFrame == null)
+            { graphTimeFrame = "Hour"; }
+
+            var userId = await GetCurrentUserId();
+
+            if (_context.Incubators.Where(i => i.IdentityUserId == userId).Any())
             {
 
-                var userId = await GetCurrentUserId();
                 var incubators = await _context.Incubators.Where(i => i.IdentityUserId == userId).ToListAsync();
 
 
 
-                if (!id.HasValue)
+                if (!IncubatorId.HasValue)
                 {
                     var incubator = incubators.First();
-                    var measurements = _context.Measurements.Take(1).Where(m => m.IncubatorId == incubator.Id);
+                    
 
-                    if (measurements.Any())
-                    {
-                        var temperatureMeasurements = new decimal[] {
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-20) && m.MeasuredDate < DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-15) && m.MeasuredDate < DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
-                };
-                        var humidityMeasurements = new decimal[] {
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-20) && m.MeasuredDate < DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-15) && m.MeasuredDate < DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
-                };
+                    
+                       var measurements = GetMeasurements(graphTimeFrame, incubator.Id);
+                        
                         var viewModel = new DashboardViewModel
                         {
                             Incubator = incubator,
                             Incubators = incubators,
-                            TempretureMeasurements = temperatureMeasurements,
-                            HumidityMeasurements = humidityMeasurements,
-                            RecentMeasurements = MostRecentMeasurements(incubator.Id)
+                            TempretureMeasurements = measurements.TempretureMeasurements,
+                            HumidityMeasurements = measurements.HumidityMeasurements,
+                            RecentMeasurements = MostRecentMeasurements(incubator.Id),
+                            Labels = measurements.Labels,
+                            TimeFrame = measurements.TimeFrame
                         };
                         return View(viewModel);
-                    }
-                    else
-                    {
-                        var temperatureMeasurements = new decimal[] { 0, 0, 0, 0, 0, 0, 0 };
-                        var humidityMeasurements = new decimal[]  { 0, 0, 0, 0, 0, 0, 0 };
-                        var viewModel = new DashboardViewModel {
-                            Incubator = incubator,
-                            Incubators = incubators,
-                            HumidityMeasurements = humidityMeasurements,
-                            TempretureMeasurements = temperatureMeasurements,
-                            RecentMeasurements = MostRecentMeasurements(incubator.Id)
-                        };
-                        return View(viewModel);
-                    }
+                    
+                    
                 }
                 else
                 {
-                    var incubator = incubators.SingleOrDefault(i => i.Id == id);
-                    var measurements = _context.Measurements.Take(3).Where(m => m.IncubatorId == incubator.Id);
+                    var incubator = incubators.SingleOrDefault(i => i.Id == IncubatorId);
 
-                    if (measurements.Any())
-                    {
-                        var temperatureMeasurements = new decimal[] {
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-20) && m.MeasuredDate < DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-15) && m.MeasuredDate < DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).Average()
-                };
-                        var humidityMeasurements = new decimal[] {
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-35)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-30) && m.MeasuredDate < DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-25) && m.MeasuredDate < DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-20) && m.MeasuredDate < DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-15) && m.MeasuredDate < DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-10) && m.MeasuredDate < DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).Average(),
-                    _context.Measurements.Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate >= DateTime.Now.AddDays(-5) && m.MeasuredDate <= DateTime.Now).Select(m => m.MeasuredValue).Average()
-                };
+                    
+                        var measurements = GetMeasurements(graphTimeFrame, incubator.Id);
+                       
                         var viewModel = new DashboardViewModel
                         {
                             Incubator = incubator,
                             Incubators = incubators,
-                            TempretureMeasurements = temperatureMeasurements,
-                            HumidityMeasurements = humidityMeasurements,
-                            RecentMeasurements = MostRecentMeasurements(incubator.Id)
+                            TempretureMeasurements = measurements.TempretureMeasurements,
+                            HumidityMeasurements = measurements.HumidityMeasurements,
+                            RecentMeasurements = MostRecentMeasurements(incubator.Id),
+                            Labels = measurements.Labels
                         };
                         return View(viewModel);
-                    }
-                    else
-                    {
-                        var temperatureMeasurements = new decimal[] { 0, 0, 0, 0, 0, 0, 0 };
-                        var humidityMeasurements = new decimal[] { 0, 0, 0, 0, 0, 0, 0 };
-                        var viewModel = new DashboardViewModel
-                        {
-                            Incubator = incubator,
-                            Incubators = incubators,
-                            HumidityMeasurements = humidityMeasurements,
-                            TempretureMeasurements = temperatureMeasurements,
-                            RecentMeasurements = MostRecentMeasurements(incubator.Id)
-                        };
-                        return View(viewModel);
-                    }
+                    
+                    
                 }
             }
             else
@@ -159,17 +107,6 @@ namespace RIMS.Controllers
             }
         }
 
-        public JsonResult GetRealTimeData(int? id)
-        {
-            Random rdn = new Random();
-            var data = new DashboardViewModel
-            {
-                TimeStamp = DateTime.Now,
-                DataValue = rdn.Next(0, 11)
-            };
-
-            return Json(data);
-        }
 
         public RecentMeasurements MostRecentMeasurements(int inubatorId)
         {
@@ -198,7 +135,7 @@ namespace RIMS.Controllers
         }
         [EnableCors("AllowAllOrigins")]
         [AllowAnonymous]
-        public ActionResult PostData(int id, decimal? temp, decimal? light)
+        public ActionResult PostData(int id, decimal? temp, decimal? humidity)
         {
             var results = "Success";
             var reported = DateTime.Now;
@@ -225,7 +162,19 @@ namespace RIMS.Controllers
                             MeasuredValue = temp.Value,
                             MeasuredDate = reported
                         });
-                    }                
+                    }
+
+                    if (humidity.HasValue)
+                    {
+                        // add temperature
+                        _context.Measurements.Add(new Measurement
+                        {
+                            MeasurementTypeId = (int)MeasurementTypesEnum.Humidity,
+                            IncubatorId = _context.Incubators.SingleOrDefault(i => i.MonitoringDeviceId == id).Id,
+                            MeasuredValue = humidity.Value,
+                            MeasuredDate = reported
+                        });
+                    }
 
                     // save it all
                     _context.SaveChanges();
@@ -237,6 +186,148 @@ namespace RIMS.Controllers
             }
 
             return Content(results);
+        }
+
+        public GraphMeasurements GetMeasurements(string graphTimeFrame, int incubatorId)
+        {
+            var temperatureMeasurements = new decimal[7];
+            var humidityMeasurements = new decimal[7];
+            var measurements = new GraphMeasurements();
+
+            switch (graphTimeFrame)
+            {
+                case "Month":
+                    temperatureMeasurements = new decimal[6] {
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-25) && m.MeasuredDate > DateTime.Now.AddDays(-30)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-20) && m.MeasuredDate > DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-15) && m.MeasuredDate > DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-10) && m.MeasuredDate > DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-5) && m.MeasuredDate > DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now && m.MeasuredDate > DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
+                };
+                    humidityMeasurements = new decimal[6] {
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-25) && m.MeasuredDate > DateTime.Now.AddDays(-30)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-20) && m.MeasuredDate > DateTime.Now.AddDays(-25)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-15) && m.MeasuredDate > DateTime.Now.AddDays(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-10) && m.MeasuredDate > DateTime.Now.AddDays(-15)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-5) && m.MeasuredDate > DateTime.Now.AddDays(-10)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now && m.MeasuredDate > DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
+                };
+                    measurements.TempretureMeasurements = temperatureMeasurements;
+                    measurements. HumidityMeasurements = humidityMeasurements;
+
+                    measurements.Labels = new string[6] {
+                    DateTime.Now.AddDays(-25).ToString("dd-MMM"),
+                    DateTime.Now.AddDays(-20).ToString("dd-MMM"),
+                    DateTime.Now.AddDays(-15).ToString("dd-MMM"),
+                    DateTime.Now.AddDays(-10).ToString("dd-MMM"),
+                    DateTime.Now.AddDays(-5).ToString("dd-MMM"),
+                    DateTime.Now.ToString("dd-MMM-yyyy") };
+
+                    measurements.TimeFrame = "Month";
+            
+            break;
+
+                case "Week":
+                    temperatureMeasurements = new decimal[6] {
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-5) && m.MeasuredDate > DateTime.Now.AddDays(-6)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-4) && m.MeasuredDate > DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-3) && m.MeasuredDate > DateTime.Now.AddDays(-4)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-2) && m.MeasuredDate > DateTime.Now.AddDays(-3)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-1) && m.MeasuredDate > DateTime.Now.AddDays(-2)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now && m.MeasuredDate > DateTime.Now.AddDays(-1)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
+                };
+                    humidityMeasurements = new decimal[6] {
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-5) && m.MeasuredDate > DateTime.Now.AddDays(-6)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-4) && m.MeasuredDate > DateTime.Now.AddDays(-5)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-3) && m.MeasuredDate > DateTime.Now.AddDays(-4)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-2) && m.MeasuredDate > DateTime.Now.AddDays(-3)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddDays(-1) && m.MeasuredDate > DateTime.Now.AddDays(-2)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now && m.MeasuredDate > DateTime.Now.AddDays(-1)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
+                };
+                    measurements.TempretureMeasurements = temperatureMeasurements;
+                    measurements.HumidityMeasurements = humidityMeasurements;
+
+                    measurements.Labels = new string[6] {
+                    DateTime.Now.AddDays(-5).ToString("dd-MMM"),
+                    DateTime.Now.AddDays(-4).ToString("dd-MMM"),
+                    DateTime.Now.AddDays(-3).ToString("dd-MMM"),
+                    DateTime.Now.AddDays(-2).ToString("dd-MMM"),
+                    DateTime.Now.AddDays(-1).ToString("dd-MMM"),
+                    DateTime.Now.ToString("dd-MMM") };
+
+                    measurements.TimeFrame = "Week";
+
+                    break;
+
+                case "Day":
+                    temperatureMeasurements = new decimal[6] {
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-20) && m.MeasuredDate > DateTime.Now.AddHours(-24)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-16) && m.MeasuredDate > DateTime.Now.AddHours(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-12) && m.MeasuredDate > DateTime.Now.AddHours(-16)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-8) && m.MeasuredDate > DateTime.Now.AddHours(-12)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-4) && m.MeasuredDate > DateTime.Now.AddHours(-8)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now && m.MeasuredDate > DateTime.Now.AddHours(-4)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
+                };
+                    humidityMeasurements = new decimal[6] {
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-20) && m.MeasuredDate > DateTime.Now.AddHours(-24)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-16) && m.MeasuredDate > DateTime.Now.AddHours(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-12) && m.MeasuredDate > DateTime.Now.AddHours(-16)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-8) && m.MeasuredDate > DateTime.Now.AddHours(-12)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddHours(-4) && m.MeasuredDate > DateTime.Now.AddHours(-8)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now && m.MeasuredDate > DateTime.Now.AddHours(-4)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
+                };
+                    measurements.TempretureMeasurements = temperatureMeasurements;
+                    measurements.HumidityMeasurements = humidityMeasurements;
+
+                    measurements.Labels = new string[6] {
+                    DateTime.Now.AddHours(-28).ToString("dd-MMM HH:mm"),
+                    DateTime.Now.AddHours(-24).ToString("dd-MMM HH:mm"),
+                    DateTime.Now.AddHours(-18).ToString("dd-MMM HH:mm"),
+                    DateTime.Now.AddHours(-12).ToString("dd-MMM HH:mm"),
+                    DateTime.Now.AddHours(-6).ToString("dd-MMM HH:mm"),
+                    DateTime.Now.ToString("dd-MMM HH:mm") };
+
+                    measurements.TimeFrame = "Day";
+
+                    break;
+
+                case "Hour":
+                    temperatureMeasurements = new decimal[6] {
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-50) && m.MeasuredDate > DateTime.Now.AddMinutes(-60)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-40) && m.MeasuredDate > DateTime.Now.AddMinutes(-50)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-30) && m.MeasuredDate > DateTime.Now.AddMinutes(-40)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-20) && m.MeasuredDate > DateTime.Now.AddMinutes(-30)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-10) && m.MeasuredDate > DateTime.Now.AddMinutes(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 1).Where(m => m.MeasuredDate <= DateTime.Now && m.MeasuredDate > DateTime.Now.AddMinutes(-10)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
+                };
+                    humidityMeasurements = new decimal[6] {
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-50) && m.MeasuredDate > DateTime.Now.AddMinutes(-60)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-40) && m.MeasuredDate > DateTime.Now.AddMinutes(-50)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-30) && m.MeasuredDate > DateTime.Now.AddMinutes(-40)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-20) && m.MeasuredDate > DateTime.Now.AddMinutes(-30)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now.AddMinutes(-10) && m.MeasuredDate > DateTime.Now.AddMinutes(-20)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average(),
+                    _context.Measurements.Where(m => m.IncubatorId == incubatorId).Where(m => m.MeasurementTypeId == 2).Where(m => m.MeasuredDate <= DateTime.Now && m.MeasuredDate > DateTime.Now.AddMinutes(-10)).Select(m => m.MeasuredValue).DefaultIfEmpty().Average()
+                };
+                    measurements.TempretureMeasurements = temperatureMeasurements;
+                    measurements.HumidityMeasurements = humidityMeasurements;
+
+                    measurements.Labels = new string[6] {
+                    DateTime.Now.AddMinutes(-50).ToString("HH:mm"),
+                    DateTime.Now.AddMinutes(-40).ToString("HH:mm"),
+                    DateTime.Now.AddMinutes(-30).ToString("HH:mm"),
+                    DateTime.Now.AddMinutes(-20).ToString("HH:mm"),
+                    DateTime.Now.AddMinutes(-10).ToString("HH:mm"),
+                    DateTime.Now.ToString("HH:mm") };
+
+                    measurements.TimeFrame = "Hour";
+
+                    break;
+
+                default:
+                    break;
+            }
+            return measurements; 
         }
     }
 }

@@ -14,16 +14,17 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="IncubatorModelId" class="control-label"></label>
-                <select asp-for="IncubatorModelId" class ="form-control" asp-items="ViewBag.IncubatorModelId"></select>
+                <select asp-for="IncubatorModelId" class ="form-control" asp-items="ViewBag.IncubatorModelId" ></select>
             </div>
             <div class="form-group">
                 <label asp-for="MonitoringDeviceId" class="control-label"></label>
-                <select asp-for="MonitoringDeviceId" class ="form-control" asp-items="ViewBag.MonitoringDeviceId"></select>
+                <input asp-for="MonitoringDeviceId" class="form-control" placeholder="Enter your monitoring device's ID number"/>
+                <span asp-validation-for="MonitoringDeviceId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <input asp-for="Name" class="form-control" placeholder="Enter a name to Identify the Incubator"/>
+                <span asp-validation-for="Name" class="text-danger" ></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>

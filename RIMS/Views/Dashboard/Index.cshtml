@@ -10,9 +10,15 @@
     {
         <div class="row">
             <div class="col-sm-3" style="background-color:ghostwhite">
+                <br />
 
+                <div class="well well-sm">
+
+                    <h3>Settings</h3>
+                </div>
+                <hr />
                 <div class="form-group" style="margin-bottom: 20px">
-                    <label for="devicesMenu">Incubator:</label>
+                    <h4 for="devicesMenu">Incubator:</h4>
                     <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 140px">
                             @Model.Incubator.Name
@@ -25,58 +31,77 @@
                             }
                         </ul>
                     </div>
-                    <hr />
                 </div>
+
 
                 @{ if (Model.RecentMeasurements.Temperature != null)
                     {
-                <div class="form-group">
-                    <label><a style="text-decoration:solid; color:red">LIVE</a> Measurements:</label><br />
 
-                    <div id="tempreture" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">@Model.RecentMeasurements.Temperature&deg;</div>
+                        <div class="form-group">
+                            <label><a style="text-decoration:solid; color:red">LAST</a> Measurements:</label><br />
 
-                    <div class="dropdown">
-                        <div id="humidity" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">@Model.RecentMeasurements.Humidity%</div>
-                    </div>
-                    <span id="measuredDate" style="font-style: italic">As of: @Model.RecentMeasurements.MeasuredDate.ToString("dd-MMM-yyyy") - @Model.RecentMeasurements.MeasuredDate.ToShortTimeString()</span>
-                    <hr />
-                </div>
+                            <div id="tempreture" class="alert alert-info" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">Temp: @Model.RecentMeasurements.Temperature&deg;C</div>
+
+                            <div class="dropdown">
+                                <div id="humidity" class="alert alert-info" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">Hum: @Model.RecentMeasurements.Humidity%</div>
+                            </div>
+                            <span id="measuredDate" style="font-style: italic">As of: @Model.RecentMeasurements.MeasuredDate.ToString("dd-MMM-yyyy") - @Model.RecentMeasurements.MeasuredDate.ToShortTimeString()</span>
+                            <hr />
+                        </div>
                     }
                     else
                     {
-                <div class="form-group">
-                    <label><a style="text-decoration:solid; color:red">LIVE</a> Measurements:</label><br />
+                        <div class="form-group">
+                            <label><a style="text-decoration:solid; color:red">LAST</a> Measurements:</label><br />
 
-                    <div id="tempreture" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">N/A</div>
+                            <div id="tempreture" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">N/A</div>
 
-                    <div class="dropdown">
-                        <div id="humidity" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">N/A</div>
-                    </div>
-                    <hr />
-                </div>
+                            <div class="dropdown">
+                                <div id="humidity" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">N/A</div>
+                            </div>
+                            <hr />
+                        </div>
                     }
-                    }
-                <div>
-                    <h4>Estimated Yeild</h4>
-                </div>
-            </div>
-            <div class="col-sm-9" style="background-color:ghostwhite">
-                <div class="form-group pull-right" style="margin-bottom: 20px">
-                    <label for="timeFrame">Time Frame:</label>
+                }
+
+                <div class="" style="margin-bottom: 20px">
+                    <h4 for="timeFrame">Time Frame:</h4>
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle btn-warning" type="button" id="timeFrame" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 100px;">
-                            1 Hour
+                        <button class="btn btn-primary dropdown-toggle btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 100px;">
+                            <span class="glyphicon glyphicon-time"></span>
+                            <span id="timeFrame">@Model.TimeFrame</span>
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="devicesMenu">
-                            <li><a >1 hour</a></li>
-                            <li><a >1 Day</a></li>
-                            <li><a >1 Week</a></li>
-                            <li><a >1 Month</a></li>
+
+                            @{
+
+                                string[] timeFrames = new string[] { "Hour", "Day", "Week", "Month" };
+
+                                foreach (var timeFrame in timeFrames)
+                                {
+                                    <li><a href="@Url.Action("Index", new { incubatorId = Model.Incubator.Id , graphTimeFrame=timeFrame })">1 @timeFrame</a></li>
+
+                                }
+                            }
                         </ul>
                     </div>
                 </div>
-                <canvas id="myChart" width="400" height="200"></canvas>
+
+            </div>
+            <div class="col-sm-9" style="background-color:ghostwhite">
+                <br />
+
+                <div class="well well-sm">
+
+                    <h3>Average Tempretures</h3>
+                    
+                </div>
+                <hr />
+
+                
+                <canvas id="myChart" width="400" height="180"></canvas>
+
             </div>
         </div>
 
@@ -85,29 +110,22 @@
             <script src="~/lib/Chart.min.js"></script>
 
             @{ 
-
-                    string[] dateLabels = new string[] {
-                    DateTime.Now.AddDays(-25).ToString("dd-MMM-yyyy"),
-                    DateTime.Now.AddDays(-20).ToString("dd-MMM-yyyy"),
-                    DateTime.Now.AddDays(-15).ToString("dd-MMM-yyyy"),
-                    DateTime.Now.AddDays(-10).ToString("dd-MMM-yyyy"),
-                    DateTime.Now.AddDays(-5).ToString("dd-MMM-yyyy"),
-                    DateTime.Now.ToString("dd-MMM-yyyy")
-
-            };
+                string[] dateLabels = Model.Labels;
             }
             <script>
-var ctx = document.getElementById("myChart").getContext('2d');
 
-                var myChart = new Chart(ctx, {
+              
+                        var ctx = document.getElementById("myChart").getContext('2d');
+
+                        var myChart = new Chart(ctx, {
                     type: 'line',
                     data: {
 
-                        labels: ["@dateLabels[0]", "@dateLabels[1]", "@dateLabels[2]", "@dateLabels[3]", "@dateLabels[4]", "@dateLabels[5]" ],
+                            labels: ["@dateLabels[0]", "@dateLabels[1]", "@dateLabels[2]", "@dateLabels[3]", "@dateLabels[4]","@dateLabels[5]" ],
                         datasets: [
                             {
                                 label: 'Tempreture',
-                                data: [@Model.TempretureMeasurements[0],@Model.TempretureMeasurements[1],@Model.TempretureMeasurements[2],@Model.TempretureMeasurements[3],@Model.TempretureMeasurements[4],@Model.TempretureMeasurements[5],@Model.TempretureMeasurements[6]],
+                                data: [@Model.TempretureMeasurements[0],@Model.TempretureMeasurements[1],@Model.TempretureMeasurements[2],@Model.TempretureMeasurements[3],@Model.TempretureMeasurements[4],@Model.TempretureMeasurements[5]],
                                 fill: false,
                                 borderWidth: 1,
                                 borderColor: '#36a2eb',
@@ -115,7 +133,7 @@ var ctx = document.getElementById("myChart").getContext('2d');
                             },
                             {
                                 label: 'Humidity',
-                                data: [@Model.HumidityMeasurements[0],@Model.HumidityMeasurements[1],@Model.HumidityMeasurements[2],@Model.HumidityMeasurements[3],@Model.HumidityMeasurements[4],@Model.HumidityMeasurements[5],@Model.HumidityMeasurements[6]],
+                                data: [@Model.HumidityMeasurements[0],@Model.HumidityMeasurements[1],@Model.HumidityMeasurements[2],@Model.HumidityMeasurements[3],@Model.HumidityMeasurements[4],@Model.HumidityMeasurements[5]],
                                 fill: false,
                                 borderWidth: 1,
                                 borderColor: '#cc65fe',
@@ -124,15 +142,17 @@ var ctx = document.getElementById("myChart").getContext('2d');
                          ]
     },
     options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: false
+                                    }
+                                }]
         }
-    }
-    });
+                        }
+                    });
+
+                
             </script>
         }
 
