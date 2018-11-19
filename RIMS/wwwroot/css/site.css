@@ -180,10 +180,6 @@ li.active span.round-tabs.five {
             background: transparent;
         }
 
-.tab-content {
-    padding-left: 60px;
-    padding-right: 60px;
-}
 
 .tab-pane {
     position: relative;
@@ -250,4 +246,6 @@ li.active span.round-tabs.five {
 .tab-content{
     margin-left:10px;
     margin-right:10px;
+    padding-left:40px;
+    padding-right:40px;
 }
