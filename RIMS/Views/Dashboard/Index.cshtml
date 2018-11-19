@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Incubator State</h2>
+<h2>Incubator Monitor</h2>
 @{
     if (Model.Incubator.Id != 0)
     {
@@ -17,7 +17,7 @@
                     <h3>Settings</h3>
                 </div>
                 <hr />
-                <div class="form-group" style="margin-bottom: 20px">
+                <div class="form-group" style="margin-bottom: 20px" title="Select the incubator you want to monitor">
                     <h4 for="devicesMenu">Incubator:</h4>
                     <div class="dropdown">
                         <button class="btn btn-primary dropdown-toggle" type="button" id="devicesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 140px">
@@ -40,10 +40,10 @@
                         <div class="form-group">
                             <label><a style="text-decoration:solid; color:red">LAST</a> Measurements:</label><br />
 
-                            <div id="tempreture" class="alert alert-info" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">Temp: @Model.RecentMeasurements.Temperature&deg;C</div>
+                            <div id="tempreture" class="alert alert-info" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center" title="The last tempreture reading received from your Incubator">Temp: @Model.RecentMeasurements.Temperature&deg;C</div>
 
                             <div class="dropdown">
-                                <div id="humidity" class="alert alert-info" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">Hum: @Model.RecentMeasurements.Humidity%</div>
+                                <div id="humidity" class="alert alert-info" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center"title="The last humidity reading received from your Incubator">Hum: @Model.RecentMeasurements.Humidity%</div>
                             </div>
                             <span id="measuredDate" style="font-style: italic">As of: @Model.RecentMeasurements.MeasuredDate.ToString("dd-MMM-yyyy") - @Model.RecentMeasurements.MeasuredDate.ToShortTimeString()</span>
                             <hr />
@@ -54,10 +54,10 @@
                         <div class="form-group">
                             <label><a style="text-decoration:solid; color:red">LAST</a> Measurements:</label><br />
 
-                            <div id="tempreture" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">N/A</div>
+                            <div id="tempreture" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center" title="The last tempreture reading received from your Incubator">N/A</div>
 
                             <div class="dropdown">
-                                <div id="humidity" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center">N/A</div>
+                                <div id="humidity" class="alert alert-success" style="width: 100px; margin-bottom: 15px; padding: 5px; text-align: center" title="The last tempreture reading received from your Incubator">N/A</div>
                             </div>
                             <hr />
                         </div>
@@ -67,7 +67,7 @@
                 <div class="" style="margin-bottom: 20px">
                     <h4 for="timeFrame">Time Frame:</h4>
                     <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 100px;">
+                        <button class="btn btn-primary dropdown-toggle btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" style="width: 100px;" title="The time frame for the tempreture & humidity graph">
                             <span class="glyphicon glyphicon-time"></span>
                             <span id="timeFrame">@Model.TimeFrame</span>
                             <span class="caret"></span>

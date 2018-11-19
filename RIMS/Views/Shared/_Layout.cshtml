@@ -20,83 +20,142 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
 </head>
-<body style="background-image:url(/images/leaves-pattern.png)">
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Home</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+<body style="background-color:ghostwhite">
+    <div class="">
+        <div class="board">
+            <!-- <h2>Welcome to IGHALO!<sup>™</sup></h2>-->
+            <div class="board-inner">
+                <ul class="nav nav-tabs" id="myTab">
+
                     @if (SignInManager.IsSignedIn(User))
                     {
-
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Portal<span class="caret"></span></a>
-
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a asp-area="" asp-controller="Dashboard" asp-action="Index"><span class="glyphicon glyphicon-bell"></span>Dashboard</a></li>
-                                <li><a asp-area="" asp-controller="EggManagement" asp-action="Index"><span class="glyphicon glyphicon-calendar"></span>Egg Management</a></li>
-                                <li class="divider"></li>
-                                <li><a asp-area="" asp-controller="Incubators" asp-action="Index"><span class="glyphicon glyphicon-save"></span>My Incubators</a></li>
-                            </ul>
+                        <li>
+                            <a href="@Url.Action("Index","Home")" title="Home">
+                                <span class="round-tabs one">
+                                    <i class="glyphicon glyphicon-home"></i>
+                                </span>
+                            </a>
                         </li>
+                        <li>
+                            <a href="@Url.Action("Index","Dashboard")" title="Incubator Monitor">
+                                <span class="round-tabs two">
+                                    <i class="glyphicon glyphicon-scale"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index","EggManagement")" title="Hatch Calender">
+                                <span class="round-tabs three">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index","Incubators")" title="My Incubators">
+                                <span class="round-tabs four">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="">
+
+                            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="My Account">
+
+                                <span class="round-tabs five">
+                                    <i class="glyphicon glyphicon-user"></i>
+
+                                </span>
+                            </a>
+
+                        </li>
+                            
+
                     }
-                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    </ul>
-                    <partial name="_LoginPartial" />
+                    else
+                    {
+                        <li>
+                            <a href="@Url.Action("Index","Home")" title="Home">
+                                <span class="round-tabs one">
+                                    <i class="glyphicon glyphicon-home"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="pull-right">
+                            <a asp-area="Identity" asp-page="/Account/Register" title="Register">
+
+                                <span class="round-tabs five">
+                                    <i class="glyphicon glyphicon-user"></i>
+
+                                </span>
+
+                            </a>
+                        </li>
+                        <li class="pull-right">
+                            <a asp-area="Identity" asp-page="/Account/Login" title="Login">
+
+                                <span class="round-tabs five">
+                                    <i class="glyphicon glyphicon-log-in"></i>
+
+                                </span>
+
+                            </a>
+                        </li>
+
+
+                    }
+
+                </ul>
+
                 </div>
             </div>
-        </nav>
-
-        <partial name="_CookieConsentPartial" />
-        <div class="container body-content">
-
-
+        <div class="tab-content">
 
             @RenderBody()
-
-            <hr />
-            <footer>
-                <p>&copy; 2018 - RIMS</p>
-            </footer>
+        </div>
         </div>
 
 
+    <partial name="_CookieConsentPartial" />
+    <div class="body-content">
+
+
+
+
+        <hr />
+        <footer>
+            <p>&copy; 2018 - RIMS</p>
+        </footer>
+    </div>
 
 
 
 
 
-        <environment include="Development">
-            <script src="~/lib/jquery/dist/jquery.js"></script>
-            <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-            <script src="~/js/site.js" asp-append-version="true"></script>
-        </environment>
-        <environment exclude="Development">
-            <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
-                    asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                    asp-fallback-test="window.jQuery"
-                    crossorigin="anonymous"
-                    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
-            </script>
-            <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
-                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                    crossorigin="anonymous"
-                    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
-            </script>
-            <script src="~/js/site.min.js" asp-append-version="true"></script>
-        </environment>
 
-        @RenderSection("Scripts", required: false)
-    </body>
+
+    
+
+    @RenderSection("Scripts", required: false)
+</body>
 </html>
