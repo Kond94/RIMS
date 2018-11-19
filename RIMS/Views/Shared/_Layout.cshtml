@@ -45,113 +45,114 @@
 
 </head>
 <body style="background-color:ghostwhite">
-        <div class="board">
-            <!-- <h2>Welcome to IGHALO!<sup>™</sup></h2>-->
-            <div class="board-inner">
-                <ul class="nav nav-tabs" id="myTab">
-
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <li>
-                            <a href="@Url.Action("Index","Home")" title="Home">
-                                <span class="round-tabs one">
-                                    <i class="glyphicon glyphicon-home"></i>
-
-                                </span>
-
-                            </a>
-                        </li>
-                        <li class="">
-
-                            <a asp-area="Identity" asp-page="/Account/Manage/Index" title="My Account">
-
-                                <span class="round-tabs five">
-                                    <i class="glyphicon glyphicon-user"></i>
-
-                                </span>
-                            </a>
-
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Dashboard")" title="Incubator Monitor">
-                                <span class="round-tabs two">
-                                    <i class="glyphicon glyphicon-scale"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","EggManagement")" title="Hatch Calender">
-                                <span class="round-tabs three">
-                                    <i class="glyphicon glyphicon-calendar"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="@Url.Action("Index","Incubators")" title="My Incubators">
-                                <span class="round-tabs four">
-                                    <i class="glyphicon glyphicon-edit"></i>
-                                </span>
-                            </a>
-                        </li>
-
-
-
-                    }
-                    else
-                    {
-                        <li>
-                            <a href="@Url.Action("Index","Home")" title="Home">
-                                <span class="round-tabs one">
-                                    <i class="glyphicon glyphicon-home"></i>
-                                </span>
-
-                            </a>
-                        </li>
-                        <li class="pull-right">
-                            <a asp-area="Identity" asp-page="/Account/Register" title="Register">
-
-                                <span class="round-tabs five">
-                                    <i class="glyphicon glyphicon-user"></i>
-
-                                </span>
-
-                            </a>
-                        </li>
-                        <li class="pull-right">
-                            <a asp-area="Identity" asp-page="/Account/Login" title="Login">
-
-                                <span class="round-tabs five">
-                                    <i class="glyphicon glyphicon-log-in"></i>
-
-                                </span>
-
-                            </a>
-                        </li>
-
-
-                    }
-
-                </ul>
-
-            </div>
-        </div>
-        <div class="tab-content" style="padding-left:40px; padding-right:40px">
-            @RenderBody()
-
-            <div class="body-content">
-
-
-
-
-                <hr />
-                <footer>
-                    <p>&copy; 2018 - RIMS</p>
-                </footer>
-            </div>
-        </div>
-    
-
     <partial name="_CookieConsentPartial" />
+
+    <div class="board">
+        <!-- <h2>Welcome to IGHALO!<sup>™</sup></h2>-->
+        <div class="board-inner">
+            <ul class="nav nav-tabs" id="myTab">
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <li>
+                        <a href="@Url.Action("Index","Home")" title="Home">
+                            <span class="round-tabs one">
+                                <i class="glyphicon glyphicon-home"></i>
+
+                            </span>
+
+                        </a>
+                    </li>
+                    <li class="">
+
+                        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="My Account">
+
+                            <span class="round-tabs five">
+                                <i class="glyphicon glyphicon-user"></i>
+
+                            </span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index","Dashboard")" title="Incubator Monitor">
+                            <span class="round-tabs two">
+                                <i class="glyphicon glyphicon-scale"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index","EggManagement")" title="Hatch Calender">
+                            <span class="round-tabs three">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index","Incubators")" title="My Incubators">
+                            <span class="round-tabs four">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </span>
+                        </a>
+                    </li>
+
+
+
+                }
+                else
+                {
+                    <li>
+                        <a href="@Url.Action("Index","Home")" title="Home">
+                            <span class="round-tabs one">
+                                <i class="glyphicon glyphicon-home"></i>
+                            </span>
+
+                        </a>
+                    </li>
+                    <li class="pull-right">
+                        <a asp-area="Identity" asp-page="/Account/Register" title="Register">
+
+                            <span class="round-tabs five">
+                                <i class="glyphicon glyphicon-user"></i>
+
+                            </span>
+
+                        </a>
+                    </li>
+                    <li class="pull-right">
+                        <a asp-area="Identity" asp-page="/Account/Login" title="Login">
+
+                            <span class="round-tabs five">
+                                <i class="glyphicon glyphicon-log-in"></i>
+
+                            </span>
+
+                        </a>
+                    </li>
+
+
+                }
+
+            </ul>
+
+        </div>
+    </div>
+    <div class="tab-content" style="padding-left:40px; padding-right:40px">
+        @RenderBody()
+
+        <div class="body-content">
+
+
+
+
+            <hr />
+            <footer>
+                <p>&copy; 2018 - RIMS</p>
+            </footer>
+        </div>
+    </div>
+
+
 
 
 
