@@ -54,7 +54,9 @@
                             <a href="@Url.Action("Index","Home")" title="Home">
                                 <span class="round-tabs one">
                                     <i class="glyphicon glyphicon-home"></i>
+
                                 </span>
+                                
                             </a>
                         </li>
                         <li>
@@ -130,23 +132,24 @@
                 </div>
             </div>
         <div class="tab-content">
-
             @RenderBody()
+
+            <div class="body-content">
+
+
+
+
+                <hr />
+                <footer>
+                    <p>&copy; 2018 - RIMS</p>
+                </footer>
+            </div>
         </div>
         </div>
 
 
     <partial name="_CookieConsentPartial" />
-    <div class="body-content">
-
-
-
-
-        <hr />
-        <footer>
-            <p>&copy; 2018 - RIMS</p>
-        </footer>
-    </div>
+    
 
 
 
