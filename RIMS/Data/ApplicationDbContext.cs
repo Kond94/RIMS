@@ -20,5 +20,6 @@ namespace RIMS.Data
         public DbSet<EggType> EggTypes { get; set; }
         public DbSet<Tray> Trays { get; set; }
         public DbSet<MonitoringDevice> MonitoringDevices { get; set; }
+        public DbSet<PushSubscription> PushSubscriptions { get; set; }
     }
 }

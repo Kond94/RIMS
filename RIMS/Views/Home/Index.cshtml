@@ -6,75 +6,86 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    
+    <div class="container"><h2>Welcome to RPIMS </h2></div>
+    <div id="exTab3" class="container">
+        <ul class="nav nav-pills">
+            <li class="active">
+                <a href="#1b" data-toggle="tab">System Overview</a>
+            </li>
+            <li>
+                <a href="#2b" data-toggle="tab">Incubator Monitoring</a>
+            </li>
+            <li>
+                <a href="#3b" data-toggle="tab">Hatching Calender</a>
+            </li>
+            <li>
+                <a href="#4a" data-toggle="tab">Manage Incubators</a>
+            </li>
+        </ul>
+
+        <div class="tab-content clearfix">
+            <div class="tab-pane active" id="1b">
+                <h3>Same as example 1 but we have now styled the tab's corner</h3>
+            </div>
+            <div class="tab-pane" id="2b">
+                <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+            </div>
+            <div class="tab-pane" id="3b">
+                <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
+            </div>
+            <div class="tab-pane" id="4b">
+                <h3>We use css to change the background color of the content to be equal to the tab</h3>
+            </div>
+        </div>
+    </div>
 
 }
 
 else
 {
-    <div id="services" class="container-fluid text-center">
-        <h2><strong>REMOTE INCUBATOR MONITORING SYSTEM</strong></h2>
-        <br>
-        <div class="row slideanim slide">
-            <div class="col-sm-4">
-                <img src="~/images/Be_In_Control1280x720 .png" style="width:100%; height:220px;" />
-                <p>Tempreture and Humidity Monitoring</p>
-                <div class="row">
-                    <div class="">
-                        <span class="glyphicon glyphicon-globe logo slideanim slide"></span>
-                    </div>
-                    <div class="">
-                        <h3>Our Values</h3>
-                        <h4> Our mission lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</h4><br>
-                        <p>
-                            
-                    </div>
-                </div>
+    <br />
+    <div id="services" class="row text-center">
+
+        <div class="col-sm-4">
+            <div class="polaroid">
+                <img src="~/images/logowords.jpg" style="width:100%; height:100%;">
             </div>
-            <div class="col-sm-4">
-                <div class="row">
-                    <div class="">
-                        <span class="glyphicon glyphicon-off"></span>
-                        <h4 style="color:#303030;">Power Management</h4>
-                        <p>Manage your Incubators backup power</p>
-                    </div>
+            <br />
 
-                    <div class="">
-                        <span class="glyphicon glyphicon-certificate"></span>
-                        <h4>Incubator State</h4>
-                        <p>Monitor your incubators stae, Anytime, Anywhere!</p>
-                    </div>
-
-                    <div class="">
-                        <span class="glyphicon glyphicon-tasks"></span>
-                        <h4>Push Notifications</h4>
-                        <p>Receive real time notifications for various functions</p>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <p class="text-center">
-                        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-success btn-lg btn-outline-rounded green">Start using RIMS <span style="margin-left:10px;" class="glyphicon glyphicon-send"></span></a>
-                    </p>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <img src="~/images/Precise_Hatching1280x720.png" style="width:100%; height:220px;" />
-                <p>Hatching Calender for Precision Farming</p>
-                <div class="row">
-                    <div class="">
-                        <span class="glyphicon glyphicon-globe logo slideanim slide"></span>
-                    </div>
-                    <div class="">
-                        <h3>Our Values</h3>
-                        <h4> Our mission lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</h4><br>
-                        <p>
-
-                    </div>
-                </div>
-            </div>
         </div>
-        <br><br>
-        
+        <div class="col-sm-4">
+            <div class="container-fluid" style="border:solid 2px grey; border-radius:15px; padding:5px; margin:5px;">
+                <span class="glyphicon glyphicon-tasks"></span>
+                <p style="color:#303030;">Incubator Monitoring</p>
+                <h5>Monitor your incubators performance on the go.</h5>
+            </div>
+
+            <div class="" style="border:solid 2px grey; border-radius:15px; padding:5px; margin:5px;">
+                <span class="glyphicon glyphicon-calendar"></span>
+                <p>Hatching Calender</p>
+                <h5>Generate a hatching calender with a few taps or clicks</h5>
+            </div>
+
+            <div class="" style="border:solid 2px grey; border-radius:15px; padding:5px; margin:5px;">
+                <span class="glyphicon glyphicon-bell"></span>
+                <p>Push Notifications</p>
+                <h5>Receive real time alerts and reminders</h5>
+            </div>
+            <br />
+
+        </div>
+        <div class="col-sm-4">
+            <div class="polaroid" style="width:100%; height:100%; position:relative">
+                <img src="~/images/incubators.jpg" style="width:100%; height:80%" -webkit-filter: contrast(180%);filter: contrast(180%);">
+                <h5>Designed For Use with Incubators from Incubators Malawi</h5>
+            </div>
+
+            <p class="text-center">
+                <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-lg btn-outline-rounded green">Start using RPIMS <span style="margin-left:10px;" class="glyphicon glyphicon-send"></span></a>
+            </p>
+        </div>
+
     </div>
-    
+
 }

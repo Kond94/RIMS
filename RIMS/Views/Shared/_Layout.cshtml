@@ -34,22 +34,12 @@
                         <a href="@Url.Action("Index","Home")" title="Home">
                             <span class="round-tabs one">
                                 <i class="glyphicon glyphicon-home"></i>
-
+                                
                             </span>
 
                         </a>
                     </li>
-                    <li class="">
 
-                        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="My Account">
-
-                            <span class="round-tabs five">
-                                <i class="glyphicon glyphicon-user"></i>
-
-                            </span>
-                        </a>
-
-                    </li>
                     <li>
                         <a href="@Url.Action("Index","Dashboard")" title="Incubator Monitor">
                             <span class="round-tabs two">
@@ -71,6 +61,33 @@
                             </span>
                         </a>
                     </li>
+                    <li class="">
+
+                        <a asp-area="Identity" asp-page="/Account/Manage/Index" title="My Account">
+
+                            <span class="round-tabs five">
+                                <i class="glyphicon glyphicon-user"></i>
+
+                            </span>
+                        </a>
+
+                    </li>
+                    <li class="pull-right" style="padding-top:4px" title="Logout">
+                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" method="post" id="logoutForm">
+
+                            <button type="submit" class="btn btn-link">
+
+                                <span class="round-tabs five">
+                                    <i class="glyphicon glyphicon-log-out"></i>
+
+                                </span>
+
+                            </button>
+
+                        </form>
+                        
+
+                    </li>
 
 
 
@@ -80,11 +97,12 @@
                     <li>
                         <a href="@Url.Action("Index","Home")" title="Home">
                             <span class="round-tabs one">
-                                <i class="glyphicon glyphicon-home"></i>
+                                <i class="glyphicon glyphicon-home success"></i>
                             </span>
 
                         </a>
                     </li>
+
                     <li class="pull-right">
                         <a asp-area="Identity" asp-page="/Account/Register" title="Register">
 
@@ -113,19 +131,17 @@
 
         </div>
     </div>
-    <div class="tab-content" style="padding-left:40px; padding-right:40px">
+    <div class="tab-content" >
         @RenderBody()
 
-        <div class="body-content">
 
 
 
 
             <hr />
             <footer>
-                <p>&copy; 2018 - RIMS</p>
+                <h5>&copy; 2018 - RPIMS. Developed By: <a>Kondwerani Kamsesa</a></h5>
             </footer>
-        </div>
     </div>
 
 

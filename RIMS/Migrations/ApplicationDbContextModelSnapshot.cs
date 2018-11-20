@@ -312,6 +312,25 @@ namespace RIMS.Migrations
                     b.ToTable("MonitoringDevices");
                 });
 
+            modelBuilder.Entity("RIMS.Models.PushSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("PushAuth");
+
+                    b.Property<string>("PushEndpoint");
+
+                    b.Property<string>("PushP256DH");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PushSubscriptions");
+                });
+
             modelBuilder.Entity("RIMS.Models.Rack", b =>
                 {
                     b.Property<int>("Id")
