@@ -37,16 +37,26 @@ namespace WebPushDemo.Controllers
         public async Task<IActionResult> Send(int id)
         {
             var payload = Request.Form["payload"];
-            var subscription = await _context.PushSubscriptions.SingleOrDefaultAsync(m => m.Id == id);
+            var subscriptions = await _context.PushSubscriptions.ToListAsync();
 
-            string vapidPublicKey = "BCiur236QjGuENpPU_FI0W3XKsiRHkEIo6JDhf4cTgq0rPL9D2ubHrmKCStDFDMGxGxn7Z2Ot6K4jVD0dHi4kDo";
-            string vapidPrivateKey = "enyM32tJLpNIxDUIc8-w9AEorWyP2FVSpgwZx2gDzgg";
+            string vapidPublicKey = _configuration.GetSection("VapidKeys")["PublicKey"];
+            string vapidPrivateKey = _configuration.GetSection("VapidKeys")["PrivateKey"];
 
-            var pushSubscription = new PushSubscription(subscription.PushEndpoint, subscription.PushP256DH, subscription.PushAuth);
-            var vapidDetails = new VapidDetails("mailto:example@example.com", vapidPublicKey, vapidPrivateKey);
+            foreach (var subscription in subscriptions)
+            {
+                if (subscription.PushAuth == null || subscription.PushEndpoint == null || subscription.PushP256DH == null)
+                { }
+                else
+                {
+                    var pushSubscription = new PushSubscription(subscription.PushEndpoint, subscription.PushP256DH, subscription.PushAuth);
+                    var vapidDetails = new VapidDetails("mailto:example@example.com", vapidPublicKey, vapidPrivateKey);
 
-            var webPushClient = new WebPushClient();
-            webPushClient.SendNotification(pushSubscription, payload, vapidDetails);
+                    var webPushClient = new WebPushClient();
+                    webPushClient.SendNotification(pushSubscription, payload, vapidDetails);
+                }
+                
+            }
+            
 
             return View();
         }
