@@ -57,7 +57,8 @@ namespace RIMS.Controllers
         public async Task<IActionResult> Create([Bind("Id,IdentityUserId,PushEndpoint,PushP256DH,PushAuth")] PushSubscription pushSubscriptions)
         {
             pushSubscriptions.IdentityUserId = await GetCurrentUserId();
-            if (ModelState.IsValid)
+
+            if (ModelState.IsValid && pushSubscriptions.PushEndpoint != null )
             {
                 _context.Add(pushSubscriptions);
                 await _context.SaveChangesAsync();
