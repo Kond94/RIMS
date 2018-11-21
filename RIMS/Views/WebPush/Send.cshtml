@@ -12,18 +12,16 @@
 
 <div class="row">
     <div class="alert alert-info">
-        <strong>Developer Notes:</strong>
+        <strong>Notes:</strong>
         <ul>
-            <li>You can find the logic for sending a web push notification in Controllers/WebPushController.cs:Send</li>
-            <li>The Payload Generation Helper fields below are not sent to the web push api. They are simply used to generate the json payload which will be sent.</li>
-            <li>Client side code for handling push notifications can be found at wwwroot/sw.js</li>
-            <li>You can include any data in your payload, as long as your sw.js handles it.</li>
+            <li>You can use this page to send notifications to users who have subscribed</li>
+            <li>If you registered succesfully, you will receive a notification shortly after sending</li>
         </ul>
     </div>
     <div class="col-md-4">
         <div class="well" style="width: 500px;">
-            <h4>Payload Generation Helper</h4>
-            <span style="font-size: 12px;">Type your Title and Message and your payload will be generated below.</span>
+            <h4>Notification sender</h4>
+            <span style="font-size: 12px;">Type your Title and Message and your notification will be generated below.</span>
             <hr/>
             <div class="form-group">
                 <label class="control-label" for="Title">Title</label>
@@ -37,13 +35,13 @@
         
         <form asp-action="Send">
             <input type="hidden" asp-for="Id"/>
-            <div class="form-group">
+            <div class="form-group" hidden>
                 <label class="control-label" for="Payload">Payload</label>
 
                 <textarea id="Payload" name="Payload" style="width: 500px; height: 200px;"></textarea>
             </div>
             <div class="form-group">
-                <input type="submit" value="Send Push" class="btn btn-primary"/>
+                <input type="submit" value="Send Notification" class="btn btn-primary"/>
             </div>
         </form>
     </div>

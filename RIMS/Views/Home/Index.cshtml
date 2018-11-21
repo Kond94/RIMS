@@ -56,6 +56,7 @@
                         {
 
                             <p>Hello there! Everything seems to be fine.</p>
+                            <p>Switch to the other tabs to learn how to navigate the site.</p>
 
                         }
                         else
@@ -63,6 +64,9 @@
 
                             if (isSubscribed == false)
                             {
+                                <img src="/images/allow_notifications.png" style="width:200px; height:80px"/>
+                                <h6>When you see this prompt from your browser click allow then click the button below to register for notifications. <a>Learn more</a></h6>
+
                                 <form asp-action="CreateSubscription">
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <input type="hidden" asp-for="IdentityUserId" value="0" />
@@ -87,7 +91,6 @@
                                             <span asp-validation-for="PushAuth" class="text-danger"></span>
                                         </div>
                                     </div>
-                                    <p>Register this device to get notifications from the system... <a>Learn more</a></p>
                                     <div class="form-group">
                                         <input type="submit" value="Register For Notifications" class="btn btn-success" />
                                     </div>
@@ -100,10 +103,10 @@
                                 <p>You currently have no incubators connected to your account.</p>
                                 <p>Add the incubator you are using to use the system. Click on the the "My Incubators" Tab above to learn how.</p>
                                 <p>
-                                    
+
                                 </p>
                                 <p>
-                                    Once you have added an incubator, click home to come back here to learn the functions.
+                                    Once you have added an incubator, click home to come back here to learn other system functions.
                                 </p>
                             }
 
@@ -124,15 +127,18 @@
                         <li>View your Incubators last reported tempreture & humidity</li>
                         <li>View your incubators tempreture and humidity as a graph report</li>
                     </ul>
-                    <p>Watch the video to the right to see how to navigate the page.</p>
+                    <p>Watch the video to see how to navigate the page.</p>
 
                 </div>
                 <div class="col-sm-6">
                     <video style="width:100%; height:100%" controls>
-                        <source src="~/videos/Monitor_Incubator.mp4" type="video/mp4">
+                        <source src="/videos/Monitor_Incubator.mp4" type="video/mp4">
                         Your browser does not support HTML5 video.
                     </video>
-                    </div>
+                    <p>
+                        My Incubators
+                    </p>
+                </div>
                 </div>
                 <div class="tab-pane" id="3b">
                     <div class="col-sm-6 well">
@@ -148,14 +154,17 @@
                             <li>Change the contents of your Incubator</li>
                             <li>View the automatically generated hatching calender</li>
                         </ul>
-                        <p>Watch the video to the right to see how to navigate the page.</p>
+                        <p>Watch the video to see how to navigate the page.</p>
 
                     </div>
                     <div class="col-sm-6">
                         <video style="width:100%; height:100%" controls>
-                            <source src="~/videos/Hatching_Calender.mp4" type="video/mp4">
+                            <source src="/videos/Hatching_Calender.mp4" type="video/mp4">
                             Your browser does not support HTML5 video.
                         </video>
+                        <p>
+                            My Incubators
+                        </p>
                     </div>
                 </div>
                 <div class="tab-pane" id="4a">
@@ -172,12 +181,12 @@
                             <li>Remove an Incubator</li>
                             <li>Edit an Incubators Details</li>
                         </ul>
-                        <p>Watch the video to the right to see how to navigate the page.</p>
+                        <p>Watch the video to see how to navigate the page.</p>
 
                     </div>
                     <div class="col-sm-6">
                         <video style="width:100%; height:100%" controls>
-                            <source src="~/videos/My_Incubators.mp4" type="video/mp4">
+                            <source src="/videos/My_Incubators.mp4" type="video/mp4">
                             Your browser does not support HTML5 video.
                         </video>
 
@@ -202,7 +211,7 @@ else
 
         <div class="col-sm-4">
             <div class="polaroid">
-                <img src="~/images/logowords.jpg" style="width:100%; height:100%;">
+                <img src="/images/logowords.jpg" style="width:100%; height:100%;">
             </div>
             <br />
 
@@ -230,7 +239,7 @@ else
         </div>
         <div class="col-sm-4">
             <div class="polaroid" style="width:100%; height:100%; position:relative">
-                <img src="~/images/incubators.jpg" style="width:100%; height:80%" -webkit-filter: contrast(180%);filter: contrast(180%);">
+                <img src="/images/incubators.jpg" style="width:100%; height:80%" -webkit-filter: contrast(180%);filter: contrast(180%);">
                 <h5>Designed For Use with Incubators from Incubators Malawi</h5>
             </div>
 

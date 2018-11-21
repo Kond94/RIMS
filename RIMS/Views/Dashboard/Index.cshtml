@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Incubator Monitor</h2>
 @{
     if (Model.Incubator.Id != 0)
     {
@@ -14,9 +13,8 @@
 
                 <div class="well well-sm">
 
-                    <h3>Settings</h3>
+                    <h4>Settings</h4>
                 </div>
-                <hr />
                 <div class="form-group" style="margin-bottom: 20px" title="Select the incubator you want to monitor">
                     <h4 for="devicesMenu">Incubator:</h4>
                     <div class="dropdown">
@@ -94,13 +92,12 @@
 
                 <div class="well well-sm">
 
-                    <h3>Average Tempretures</h3>
+                    <h4>Average Tempretures</h4>
                     
                 </div>
-                <hr />
 
                 
-                <canvas id="myChart" width="400" height="180"></canvas>
+                <canvas id="myChart" width="400" height="170"></canvas>
 
             </div>
         </div>
@@ -159,9 +156,11 @@
     }
     else
     {
-        <h4>
-            Sorry, you havent added any incubators yet, please add in the "My incubators" page.
-        </h4>
+            <div class="well">
+                <h4>
+                    Sorry, you havent added any incubators yet, please add in the "My incubators" page.
+                </h4>
+            </div>
     }
 }
 

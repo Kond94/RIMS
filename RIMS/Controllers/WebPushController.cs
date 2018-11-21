@@ -39,8 +39,8 @@ namespace WebPushDemo.Controllers
             var payload = Request.Form["payload"];
             var subscription = await _context.PushSubscriptions.SingleOrDefaultAsync(m => m.Id == id);
 
-            string vapidPublicKey = _configuration.GetSection("VapidKeys")["PublicKey"];
-            string vapidPrivateKey = _configuration.GetSection("VapidKeys")["PrivateKey"];
+            string vapidPublicKey = "BCiur236QjGuENpPU_FI0W3XKsiRHkEIo6JDhf4cTgq0rPL9D2ubHrmKCStDFDMGxGxn7Z2Ot6K4jVD0dHi4kDo";
+            string vapidPrivateKey = "enyM32tJLpNIxDUIc8-w9AEorWyP2FVSpgwZx2gDzgg";
 
             var pushSubscription = new PushSubscription(subscription.PushEndpoint, subscription.PushP256DH, subscription.PushAuth);
             var vapidDetails = new VapidDetails("mailto:example@example.com", vapidPublicKey, vapidPrivateKey);
