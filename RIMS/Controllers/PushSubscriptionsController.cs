@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,14 +15,25 @@ namespace RIMS.Controllers
     public class PushSubscriptionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
         private readonly IConfiguration _configuration;
 
-        public PushSubscriptionsController(ApplicationDbContext _context, IConfiguration configuration)
+        public PushSubscriptionsController(ApplicationDbContext context, IConfiguration configuration, UserManager<IdentityUser> userManager)
         {
-            this._context = _context;
+            _context = context;
             _configuration = configuration;
+            _userManager = userManager;
         }
+        [HttpGet]
+        public async Task<string> GetCurrentUserId()
+        {
+            IdentityUser usr = await GetCurrentUserAsync();
+            return usr?.Id;
+        }
+
+        private Task<IdentityUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
 
         // GET: pushSubscriptions
         public async Task<IActionResult> Index()
@@ -42,8 +54,9 @@ namespace RIMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,PushEndpoint,PushP256DH,PushAuth")] PushSubscription pushSubscriptions)
+        public async Task<IActionResult> Create([Bind("Id,IdentityUserId,PushEndpoint,PushP256DH,PushAuth")] PushSubscription pushSubscriptions)
         {
+            pushSubscriptions.IdentityUserId = await GetCurrentUserId();
             if (ModelState.IsValid)
             {
                 _context.Add(pushSubscriptions);

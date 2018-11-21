@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using RIMS.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Hangfire;
 
 namespace RIMS
 {
@@ -28,7 +29,10 @@ namespace RIMS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+            services.AddHangfire(config =>
+            config.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddMvc();
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -58,6 +62,8 @@ namespace RIMS
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

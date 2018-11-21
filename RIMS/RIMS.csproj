@@ -37,9 +37,12 @@
     <Compile Remove="Data\Migrations\20181116003744_addMonitoringdeviceIdentifier.Designer.cs" />
     <Compile Remove="Data\Migrations\20181116003919_seedExtraAddedFields.cs" />
     <Compile Remove="Data\Migrations\20181116003919_seedExtraAddedFields.Designer.cs" />
+    <Compile Remove="Migrations\20181120131456_addUserIdToPushSubScriptions.cs" />
+    <Compile Remove="Migrations\20181120131456_addUserIdToPushSubScriptions.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.6.21" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.5" PrivateAssets="All" />

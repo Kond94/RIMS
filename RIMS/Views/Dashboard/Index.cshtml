@@ -27,7 +27,7 @@
                         <ul class="dropdown-menu" aria-labelledby="devicesMenu">
                             @foreach (var item in Model.Incubators)
                             {
-                                <li><a href="@Url.Action("Index", new { id = item.Id })">@item.Name</a></li>
+                                <li><a href="@Url.Action("Index", new { incubatorId = item.Id})">@item.Name</a></li>
                             }
                         </ul>
                     </div>

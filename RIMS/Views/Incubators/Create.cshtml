@@ -4,31 +4,13 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<h2>Add Incubator</h2>
 
-<h4>Incubator</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IncubatorModelId" class="control-label"></label>
-                <select asp-for="IncubatorModelId" class="form-control" asp-items="ViewBag.IncubatorModelId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="MonitoringDeviceId" class="control-label"></label>
-                <input asp-for="MonitoringDeviceId" class="form-control" placeholder="Enter your monitoring device's ID number" />
-                <span asp-validation-for="MonitoringDeviceId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label asp-for="MonitoringDeviceId">
-                        <input asp-for="MonitoringDeviceId" />
-                        @Html.DisplayNameFor(m => m.MonitoringDeviceId)
-                    </label>
-                </div>
-            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" placeholder="Enter a name to Identify the Incubator" />
@@ -39,6 +21,22 @@
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="IncubatorModelId" class="control-label"></label>
+                <select asp-for="IncubatorModelId" class="form-control" asp-items="ViewBag.IncubatorModelId"></select>
+            </div>
+            <label>Have you purchased a Monitoring Device</label>
+            <h6 class="danger">This feature is disabled until device is fully developed.</h6>
+            <div class="checkbox">
+                <label><input onclick="" type="checkbox" value="">I have a device</label>
+            </div>
+            <div id="monitoringDevice" class="form-group" hidden>
+                <label asp-for="MonitoringDeviceId" class="control-label"></label>
+                <input value="2" asp-for="MonitoringDeviceId" class="form-control" placeholder="Enter your monitoring device's ID number" />
+                <span asp-validation-for="MonitoringDeviceId" class="text-danger"></span>
+            </div>
+
+
             <div class="form-group" hidden>
                 <label asp-for="IdentityUserId" class="control-label"></label>
                 <input asp-for="IdentityUserId" class="form-control" value="Default" />
@@ -56,4 +54,21 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        function ChangeHidden() {
+            var element = document.getElementById("monitoringDevice").getAttribute("hidden");
+            console.log(element);
+
+            if (element == "") {
+                document.getElementById("monitoringDevice").removeAttribute("hidden")
+            }
+            else
+            {
+                document.getElementById("monitoringDevice").setAttribute("hidden")
+            }
+        }
+
+    </script>
 }

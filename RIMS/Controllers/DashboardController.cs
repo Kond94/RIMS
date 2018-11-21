@@ -38,7 +38,7 @@ namespace RIMS.Controllers
 
         private Task<IdentityUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
-        public async Task<IActionResult> Index(int? IncubatorId, string graphTimeFrame)
+        public async Task<IActionResult> Index(int? incubatorId, string graphTimeFrame)
         {
             if (graphTimeFrame == null)
             { graphTimeFrame = "Hour"; }
@@ -52,7 +52,7 @@ namespace RIMS.Controllers
 
 
 
-                if (!IncubatorId.HasValue)
+                if (!incubatorId.HasValue)
                 {
                     var incubator = incubators.First();
                     
@@ -76,7 +76,7 @@ namespace RIMS.Controllers
                 }
                 else
                 {
-                    var incubator = incubators.SingleOrDefault(i => i.Id == IncubatorId);
+                    var incubator = incubators.SingleOrDefault(i => i.Id == incubatorId);
 
                     
                         var measurements = GetMeasurements(graphTimeFrame, incubator.Id);

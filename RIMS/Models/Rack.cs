@@ -17,6 +17,7 @@ namespace RIMS.Models
         }
         public int Id { get; set; }
         public int IncubatorId { get; set; }
+        public Incubator Incubator { get; set; }
         [Required]
         public byte RackNumber { get; set; }
         public virtual ICollection<Tray> Trays { get; set; }

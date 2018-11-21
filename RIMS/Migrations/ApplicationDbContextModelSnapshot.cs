@@ -318,7 +318,8 @@ namespace RIMS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("IdentityUserId")
+                        .IsRequired();
 
                     b.Property<string>("PushAuth");
 
@@ -327,6 +328,8 @@ namespace RIMS.Migrations
                     b.Property<string>("PushP256DH");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdentityUserId");
 
                     b.ToTable("PushSubscriptions");
                 });
@@ -452,6 +455,14 @@ namespace RIMS.Migrations
                     b.HasOne("RIMS.Models.MeasurementType", "MeasurementType")
                         .WithMany("Measurements")
                         .HasForeignKey("MeasurementTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("RIMS.Models.PushSubscription", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -1,18 +1,43 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@model RIMS.Models.PushSubscription
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-
+@section Scripts
+    {
+    <script src="@Url.Content("~/js/CreateDevice.js")"></script>
+}
+@{ 
+    var isSubscribed = @ViewBag.isSubscribed;
+    var hasIncubator = @ViewBag.hasIncubator;
+}
 
 @if (SignInManager.IsSignedIn(User))
 {
-    
-    <div class="container"><h2>Welcome to RPIMS </h2></div>
+    <br />
     <div id="exTab3" class="container">
         <ul class="nav nav-pills">
+           
+                
+
             <li class="active">
-                <a href="#1b" data-toggle="tab">System Overview</a>
+                @{ if (isSubscribed == true && hasIncubator == true)
+                    {
+                        <a href="#1b" data-toggle="tab">
+                            Overview
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="#1b" data-toggle="tab">
+                            Get Started
+                        </a>
+                    }
+                }
+
             </li>
+            
+
             <li>
                 <a href="#2b" data-toggle="tab">Incubator Monitoring</a>
             </li>
@@ -20,26 +45,154 @@
                 <a href="#3b" data-toggle="tab">Hatching Calender</a>
             </li>
             <li>
-                <a href="#4a" data-toggle="tab">Manage Incubators</a>
+                <a href="#4a" data-toggle="tab">My Incubators</a>
             </li>
         </ul>
 
         <div class="tab-content clearfix">
             <div class="tab-pane active" id="1b">
-                <h3>Same as example 1 but we have now styled the tab's corner</h3>
-            </div>
-            <div class="tab-pane" id="2b">
-                <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
-            </div>
-            <div class="tab-pane" id="3b">
-                <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
-            </div>
-            <div class="tab-pane" id="4b">
-                <h3>We use css to change the background color of the content to be equal to the tab</h3>
-            </div>
-        </div>
-    </div>
+                <div class="well">
+                    @{ if (isSubscribed == true && hasIncubator == true)
+                        {
 
+                            <p>Hello there! Everything seems to be fine.</p>
+
+                        }
+                        else
+                        {
+
+                            if (isSubscribed == false)
+                            {
+                                <form asp-action="CreateSubscription">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="IdentityUserId" value="0" />
+
+                                    <div class="well" style="visibility:hidden;" hidden>
+                                        <h4>Web Push Details</h4>
+                                        <span style="font-size: 12px;">These values will automatically become populated once correct permissions are given by the browser.</span>
+                                        <hr />
+                                        <div class="form-group">
+                                            <label asp-for="PushEndpoint" class="control-label"></label>
+                                            <input asp-for="PushEndpoint" class="form-control" readonly required />
+                                            <span asp-validation-for="PushEndpoint" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group" type="hidden">
+                                            <label asp-for="PushP256DH" class="control-label"></label>
+                                            <input asp-for="PushP256DH" class="form-control" readonly required />
+                                            <span asp-validation-for="PushP256DH" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group" type="hidden">
+                                            <label asp-for="PushAuth" class="control-label"></label>
+                                            <input asp-for="PushAuth" class="form-control" readonly required />
+                                            <span asp-validation-for="PushAuth" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <p>Register this device to get notifications from the system... <a>Learn more</a></p>
+                                    <div class="form-group">
+                                        <input type="submit" value="Register For Notifications" class="btn btn-success" />
+                                    </div>
+                                </form>
+                                <hr />
+                            }
+
+                            if (hasIncubator == false)
+                            {
+                                <p>You currently have no incubators connected to your account.</p>
+                                <p>Add the incubator you are using to use the system. Click on the the "My Incubators" Tab above to learn how.</p>
+                                <p>
+                                    
+                                </p>
+                                <p>
+                                    Once you have added an incubator, click home to come back here to learn the functions.
+                                </p>
+                            }
+
+                        }
+                    }
+                </div>
+                </div>
+            <div class="tab-pane" id="2b">
+                <div class="col-sm-6 well">
+                    <p>
+                        In the
+                        <span class="round-tabs two" style="width:auto; height:auto; border:0">
+                            <i class="glyphicon glyphicon-scale"></i>
+                        </span>
+                        "Incubator Monitor" tab, you can:
+                    </p>
+                    <ul>
+                        <li>View your Incubators last reported tempreture & humidity</li>
+                        <li>View your incubators tempreture and humidity as a graph report</li>
+                    </ul>
+                    <p>Watch the video to the right to see how to navigate the page.</p>
+
+                </div>
+                <div class="col-sm-6">
+                    <video style="width:100%; height:100%" controls>
+                        <source src="~/videos/Monitor_Incubator.mp4" type="video/mp4">
+                        Your browser does not support HTML5 video.
+                    </video>
+                    </div>
+                </div>
+                <div class="tab-pane" id="3b">
+                    <div class="col-sm-6 well">
+                        <p>
+                            In the
+                            <span class="round-tabs three" style="width:auto; height:auto; border:0">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </span>
+                            "Hatch Calender" page, you can:
+                        </p>
+                        <ul>
+                            <li>View the contents of your Incubator</li>
+                            <li>Change the contents of your Incubator</li>
+                            <li>View the automatically generated hatching calender</li>
+                        </ul>
+                        <p>Watch the video to the right to see how to navigate the page.</p>
+
+                    </div>
+                    <div class="col-sm-6">
+                        <video style="width:100%; height:100%" controls>
+                            <source src="~/videos/Hatching_Calender.mp4" type="video/mp4">
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
+                </div>
+                <div class="tab-pane" id="4a">
+                    <div class="col-sm-6 well">
+                        <p>
+                            In the
+                            <span class="round-tabs four" style="width:auto; height:auto; border:0">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </span>
+                            "My Incubators" page, you can:
+                        </p>
+                        <ul>
+                            <li>Add an Incubator</li>
+                            <li>Remove an Incubator</li>
+                            <li>Edit an Incubators Details</li>
+                        </ul>
+                        <p>Watch the video to the right to see how to navigate the page.</p>
+
+                    </div>
+                    <div class="col-sm-6">
+                        <video style="width:100%; height:100%" controls>
+                            <source src="~/videos/My_Incubators.mp4" type="video/mp4">
+                            Your browser does not support HTML5 video.
+                        </video>
+
+                        <p>
+                            My Incubators
+                        </p>
+                    </div>
+                </div>
+            </div>
+    </div>
+    
+    <script>
+    //Vapid public key.
+    var applicationServerPublicKey = '@ViewBag.PublicKey';
+    </script>
 }
 
 else
@@ -56,7 +209,7 @@ else
         </div>
         <div class="col-sm-4">
             <div class="container-fluid" style="border:solid 2px grey; border-radius:15px; padding:5px; margin:5px;">
-                <span class="glyphicon glyphicon-tasks"></span>
+                <span class="glyphicon glyphicon-scale"></span>
                 <p style="color:#303030;">Incubator Monitoring</p>
                 <h5>Monitor your incubators performance on the go.</h5>
             </div>
@@ -89,3 +242,4 @@ else
     </div>
 
 }
+
