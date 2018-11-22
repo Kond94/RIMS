@@ -13,7 +13,7 @@
 
     var title = data.title;
     var message = data.message;
-    var icon = "images/push-icon.jpg";
+    var icon = "/images/logowords.jpg";
     
     event.waitUntil(self.registration.showNotification(title, {
         body: message,

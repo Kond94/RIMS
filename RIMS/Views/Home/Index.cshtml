@@ -3,11 +3,8 @@
 
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-@section Scripts
-    {
-    <script src="@Url.Content("~/js/CreateDevice.js")"></script>
-}
-@{ 
+
+@{
     var isSubscribed = @ViewBag.isSubscribed;
     var hasIncubator = @ViewBag.hasIncubator;
 }
@@ -17,8 +14,8 @@
     <br />
     <div id="exTab3" class="container">
         <ul class="nav nav-pills">
-           
-                
+
+
 
             <li class="active">
                 @{ if (isSubscribed == true && hasIncubator == true)
@@ -36,7 +33,7 @@
                 }
 
             </li>
-            
+
 
             <li>
                 <a href="#2b" data-toggle="tab">Incubator Monitoring</a>
@@ -64,7 +61,11 @@
 
                             if (isSubscribed == false)
                             {
-                                <img src="/images/allow_notifications.png" style="width:200px; height:80px"/>
+                                <script>
+                                //Vapid public key.
+                                var applicationServerPublicKey = '@ViewBag.PublicKey';
+                                </script>
+                                <img src="/images/allow_notifications.png" style="width:200px; height:80px" />
                                 <h6>When you see this prompt from your browser click allow then click the button below to register for notifications. <a>Learn more</a></h6>
 
                                 <form asp-action="CreateSubscription">
@@ -113,7 +114,7 @@
                         }
                     }
                 </div>
-                </div>
+            </div>
             <div class="tab-pane" id="2b">
                 <div class="col-sm-6 well">
                     <p>
@@ -139,69 +140,66 @@
                         My Incubators
                     </p>
                 </div>
+            </div>
+            <div class="tab-pane" id="3b">
+                <div class="col-sm-6 well">
+                    <p>
+                        In the
+                        <span class="round-tabs three" style="width:auto; height:auto; border:0">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                        </span>
+                        "Hatch Calender" page, you can:
+                    </p>
+                    <ul>
+                        <li>View the contents of your Incubator</li>
+                        <li>Change the contents of your Incubator</li>
+                        <li>View the automatically generated hatching calender</li>
+                    </ul>
+                    <p>Watch the video to see how to navigate the page.</p>
+
                 </div>
-                <div class="tab-pane" id="3b">
-                    <div class="col-sm-6 well">
-                        <p>
-                            In the
-                            <span class="round-tabs three" style="width:auto; height:auto; border:0">
-                                <i class="glyphicon glyphicon-calendar"></i>
-                            </span>
-                            "Hatch Calender" page, you can:
-                        </p>
-                        <ul>
-                            <li>View the contents of your Incubator</li>
-                            <li>Change the contents of your Incubator</li>
-                            <li>View the automatically generated hatching calender</li>
-                        </ul>
-                        <p>Watch the video to see how to navigate the page.</p>
-
-                    </div>
-                    <div class="col-sm-6">
-                        <video style="width:100%; height:100%" controls>
-                            <source src="/videos/Hatching_Calender.mp4" type="video/mp4">
-                            Your browser does not support HTML5 video.
-                        </video>
-                        <p>
-                            My Incubators
-                        </p>
-                    </div>
-                </div>
-                <div class="tab-pane" id="4a">
-                    <div class="col-sm-6 well">
-                        <p>
-                            In the
-                            <span class="round-tabs four" style="width:auto; height:auto; border:0">
-                                <i class="glyphicon glyphicon-edit"></i>
-                            </span>
-                            "My Incubators" page, you can:
-                        </p>
-                        <ul>
-                            <li>Add an Incubator</li>
-                            <li>Remove an Incubator</li>
-                            <li>Edit an Incubators Details</li>
-                        </ul>
-                        <p>Watch the video to see how to navigate the page.</p>
-
-                    </div>
-                    <div class="col-sm-6">
-                        <video style="width:100%; height:100%" controls>
-                            <source src="/videos/My_Incubators.mp4" type="video/mp4">
-                            Your browser does not support HTML5 video.
-                        </video>
-
-                        <p>
-                            My Incubators
-                        </p>
-                    </div>
+                <div class="col-sm-6">
+                    <video style="width:100%; height:100%" controls>
+                        <source src="/videos/Hatching_Calender.mp4" type="video/mp4">
+                        Your browser does not support HTML5 video.
+                    </video>
+                    <p>
+                        My Incubators
+                    </p>
                 </div>
             </div>
+            <div class="tab-pane" id="4a">
+                <div class="col-sm-6 well">
+                    <p>
+                        In the
+                        <span class="round-tabs four" style="width:auto; height:auto; border:0">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </span>
+                        "My Incubators" page, you can:
+                    </p>
+                    <ul>
+                        <li>Add an Incubator</li>
+                        <li>Remove an Incubator</li>
+                        <li>Edit an Incubators Details</li>
+                    </ul>
+                    <p>Watch the video to see how to navigate the page.</p>
+
+                </div>
+                <div class="col-sm-6">
+                    <video style="width:100%; height:100%" controls>
+                        <source src="/videos/My_Incubators.mp4" type="video/mp4">
+                        Your browser does not support HTML5 video.
+                    </video>
+
+                    <p>
+                        My Incubators
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
+
     
-    <script>
-    //Vapid public key.
-    var applicationServerPublicKey = '@ViewBag.PublicKey';
-    </script>
 }
 
 else
@@ -252,3 +250,7 @@ else
 
 }
 
+@section Scripts
+    {
+    <script src="@Url.Content("~/js/CreateDevice.js")"></script>
+}

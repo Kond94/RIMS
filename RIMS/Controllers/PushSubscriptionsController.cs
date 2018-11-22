@@ -58,7 +58,7 @@ namespace RIMS.Controllers
         {
             pushSubscriptions.IdentityUserId = await GetCurrentUserId();
 
-            if (ModelState.IsValid && pushSubscriptions.PushEndpoint != null )
+            if (ModelState.IsValid)
             {
                 _context.Add(pushSubscriptions);
                 await _context.SaveChangesAsync();
