@@ -1,5 +1,5 @@
 ﻿//var applicationServerPublicKey = '';
-var serviceWorker = 'sw.js';
+var serviceWorker = './sw.js';
 var isSubscribed = false;
 
 $(document).ready(function () {
@@ -78,7 +78,7 @@ function subscribe() {
         var subscribeParams = { userVisibleOnly: true };
 
         //Setting the public key of our VAPID key pair.
-        var applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+        var applicationServerKey = urlB64ToUint8Array("BB1RoUbq0CwjB6v4BLonXpZvBFlR3btc1zINs8KcN0ERcaDFPXBEKmWw--EHoIvX9GjBqaq2ZqXg3jbJF35p3Yo");
         subscribeParams.applicationServerKey = applicationServerKey;
 
         reg.pushManager.subscribe(subscribeParams)
