@@ -1,5 +1,5 @@
 ﻿//var applicationServerPublicKey = '';
-var serviceWorker = '/sw.js';
+var serviceWorker = '../sw.js';
 var isSubscribed = false;
 
 $(document).ready(function () {
