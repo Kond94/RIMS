@@ -52,7 +52,7 @@ namespace RIMS.Controllers
                 hasIncubator = true;
             }
 
-            ViewBag.PublicKey = _configuration.GetSection("VapidKeys")["PublicKey"];
+            ViewBag.PublicKey = "BB1RoUbq0CwjB6v4BLonXpZvBFlR3btc1zINs8KcN0ERcaDFPXBEKmWw--EHoIvX9GjBqaq2ZqXg3jbJF35p3Yo";
             ViewBag.isSubscribed = isSubscribed;
             ViewBag.hasIncubator = hasIncubator;
 
