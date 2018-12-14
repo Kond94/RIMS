@@ -135,7 +135,7 @@ namespace RIMS.Controllers
         }
         [EnableCors("AllowAllOrigins")]
         [AllowAnonymous]
-        public ActionResult PostData(int id, decimal? temp, decimal? humidity)
+        public ActionResult PostData(int id, decimal? temp, decimal? light)
         {
             var results = "Success";
             var reported = DateTime.Now;
@@ -164,14 +164,14 @@ namespace RIMS.Controllers
                         });
                     }
 
-                    if (humidity.HasValue)
+                    if (light.HasValue)
                     {
                         // add temperature
                         _context.Measurements.Add(new Measurement
                         {
                             MeasurementTypeId = (int)MeasurementTypesEnum.Humidity,
                             IncubatorId = _context.Incubators.SingleOrDefault(i => i.MonitoringDeviceId == id).Id,
-                            MeasuredValue = humidity.Value,
+                            MeasuredValue = light.Value,
                             MeasuredDate = reported
                         });
                     }

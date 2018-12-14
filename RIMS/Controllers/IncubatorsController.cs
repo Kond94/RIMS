@@ -68,7 +68,9 @@ namespace RIMS.Controllers
         public IActionResult Create()
         {
             ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity");
+            ViewBag.NoMonitoringDevice = false;
             return View();
+
         }
 
         // POST: Incubators/Create
@@ -78,6 +80,15 @@ namespace RIMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IncubatorModelId,MonitoringDeviceId,Id,Name,Description,IdentityUserId")] Incubator incubator)
         {
+            var monitoringDevices = _context.MonitoringDevices.Select(m => m.Id).ToList();
+
+
+            if (!monitoringDevices.Contains(incubator.MonitoringDeviceId)) {
+                ViewBag.NoMonitoringDevice = true;
+                ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity", incubator.IncubatorModelId);
+                return View(incubator);
+                }
+
             incubator.IdentityUser = await GetCurrentUserAsync();
             incubator.IdentityUserId = await GetCurrentUserId();
             if (ModelState.IsValid)
@@ -128,7 +139,7 @@ namespace RIMS.Controllers
                 return RedirectToAction(nameof(Index));
 
             }
-
+            
             ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity", incubator.IncubatorModelId);
             return View(incubator);
         }

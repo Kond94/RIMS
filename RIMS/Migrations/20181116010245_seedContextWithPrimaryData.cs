@@ -9,10 +9,10 @@ namespace RIMS.Migrations
             migrationBuilder.Sql(@"
             SET IDENTITY_INSERT [dbo].[EggTypes] ON
 INSERT INTO [dbo].[EggTypes] ([Id], [Name], [CandlingDays], [HatchPreparationDays], [HatchDays]) VALUES (1, N'None', 0, 0, 0)
-INSERT INTO [dbo].[EggTypes] ([Id], [Name], [CandlingDays], [HatchPreparationDays], [HatchDays]) VALUES (2, N'Quail', 10, 15, 20)
-INSERT INTO [dbo].[EggTypes] ([Id], [Name], [CandlingDays], [HatchPreparationDays], [HatchDays]) VALUES (3, N'Chicken', 15, 20, 30)
+INSERT INTO [dbo].[EggTypes] ([Id], [Name], [CandlingDays], [HatchPreparationDays], [HatchDays]) VALUES (2, N'Quail', 15, 22, 26)
+INSERT INTO [dbo].[EggTypes] ([Id], [Name], [CandlingDays], [HatchPreparationDays], [HatchDays]) VALUES (3, N'Chicken', 10, 19, 21)
 INSERT INTO [dbo].[EggTypes] ([Id], [Name], [CandlingDays], [HatchPreparationDays], [HatchDays]) VALUES (4, N'Duck', 18, 25, 30)
-INSERT INTO [dbo].[EggTypes] ([Id], [Name], [CandlingDays], [HatchPreparationDays], [HatchDays]) VALUES (5, N'Turkey', 10, 28, 40)
+INSERT INTO [dbo].[EggTypes] ([Id], [Name], [CandlingDays], [HatchPreparationDays], [HatchDays]) VALUES (5, N'Turkey', 16, 26, 28)
 INSERT INTO [dbo].[EggTypes] ([Id], [Name], [CandlingDays], [HatchPreparationDays], [HatchDays]) VALUES (6, N'Gunea Fowl', 20, 15, 30)
 SET IDENTITY_INSERT [dbo].[EggTypes] OFF
 
@@ -30,7 +30,7 @@ SET IDENTITY_INSERT [dbo].[MeasurementTypes] OFF
 
 SET IDENTITY_INSERT [dbo].[MonitoringDevices] ON
 INSERT INTO [dbo].[MonitoringDevices] ([Id], [Name], [Description], [Indentifier]) VALUES (1, N'ESP8266', N'Wifi Module', N'ESP8266-BetaTester')
-INSERT INTO [dbo].[MonitoringDevices] ([Id], [Name], [Description], [Indentifier]) VALUES (2, N'None', N'None', N'None')
+INSERT INTO [dbo].[MonitoringDevices] ([Id], [Name], [Description], [Indentifier]) VALUES (0, N'None', N'None', N'None')
 SET IDENTITY_INSERT [dbo].[MonitoringDevices] OFF
             ");
 

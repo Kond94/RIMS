@@ -4,6 +4,10 @@
     ViewData["Title"] = "Create";
 }
 
+@{
+    var NoMonitoringDevice = @ViewBag.NoMonitoringDevice;
+    
+}
 <h2>Add Incubator</h2>
 
 <hr />
@@ -26,9 +30,15 @@
                 <select asp-for="IncubatorModelId" class="form-control" asp-items="ViewBag.IncubatorModelId"></select>
             </div>
             <label>Have you purchased a Monitoring Device? Enter its Identification number below</label>
-            
+            @{
+                if (NoMonitoringDevice == true)
+                {
+                    <label style="color:red">The Monitoring Id you entered is invalid, please enter a valid one. If  you do not have a device, enter 0.</label>
+                    NoMonitoringDevice = false;
+                }
+            }
             <div id="monitoringDevice" class="form-group">
-                <input value="2" asp-for="MonitoringDeviceId" class="form-control" placeholder="Enter your monitoring device's ID number" />
+                <input value="0" asp-for="MonitoringDeviceId" class="form-control" placeholder="Enter your monitoring device's ID number" />
                 <span asp-validation-for="MonitoringDeviceId" class="text-danger"></span>
             </div>
 
@@ -59,7 +69,7 @@
             console.log(element);
 
             element.setAttribute("visiblity", "visible");
-            
+
         }
 
     </script>
