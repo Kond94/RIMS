@@ -83,15 +83,19 @@ namespace RIMS.Controllers
             var monitoringDevices = _context.MonitoringDevices.Select(m => m.Id).ToList();
 
             var incubatorsMonitoringDevices = _context.Incubators.Select(i => i.MonitoringDeviceId).ToList();
-
-            if (!monitoringDevices.Contains(incubator.MonitoringDeviceId) || incubatorsMonitoringDevices.Contains(incubator.MonitoringDeviceId)) {
-                ViewBag.NoMonitoringDevice = true;
-                ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity", incubator.IncubatorModelId);
-                return View(incubator);
+            if (incubator.MonitoringDeviceId != 0)
+            {
+                if (!monitoringDevices.Contains(incubator.MonitoringDeviceId) || incubatorsMonitoringDevices.Contains(incubator.MonitoringDeviceId))
+                {
+                    ViewBag.NoMonitoringDevice = true;
+                    ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity", incubator.IncubatorModelId);
+                    return View(incubator);
                 }
+            }
 
             incubator.IdentityUser = await GetCurrentUserAsync();
             incubator.IdentityUserId = await GetCurrentUserId();
+
             if (ModelState.IsValid)
             {
                 var dateAdded = DateTime.Now.Date;
