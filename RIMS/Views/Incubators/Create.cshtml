@@ -25,13 +25,9 @@
                 <label asp-for="IncubatorModelId" class="control-label"></label>
                 <select asp-for="IncubatorModelId" class="form-control" asp-items="ViewBag.IncubatorModelId"></select>
             </div>
-            <label>Have you purchased a Monitoring Device?</label>
-            <h6 style="color:red;">(This feature is disabled until device is fully developed)</h6>
-            <div class="checkbox">
-                <label><input onclick="" type="checkbox" value="">I have a device</label>
-            </div>
-            <div id="monitoringDevice" class="form-group" hidden>
-                <label asp-for="MonitoringDeviceId" class="control-label"></label>
+            <label>Have you purchased a Monitoring Device? Enter its Identification number below</label>
+            
+            <div id="monitoringDevice" class="form-group">
                 <input value="2" asp-for="MonitoringDeviceId" class="form-control" placeholder="Enter your monitoring device's ID number" />
                 <span asp-validation-for="MonitoringDeviceId" class="text-danger"></span>
             </div>
@@ -58,16 +54,12 @@
     <script>
 
         function ChangeHidden() {
-            var element = document.getElementById("monitoringDevice").getAttribute("hidden");
+
+            var element = document.getElementById("monitoringDevice");
             console.log(element);
 
-            if (element == "") {
-                document.getElementById("monitoringDevice").removeAttribute("hidden")
-            }
-            else
-            {
-                document.getElementById("monitoringDevice").setAttribute("hidden")
-            }
+            element.setAttribute("visiblity", "visible");
+            
         }
 
     </script>
