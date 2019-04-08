@@ -90,6 +90,9 @@ namespace RIMS.Controllers
                 return View(incubator);
                 }
 
+            if (incubator.MonitoringDeviceId == 0)
+                incubator.MonitoringDeviceId = 2;
+
             incubator.IdentityUser = await GetCurrentUserAsync();
             incubator.IdentityUserId = await GetCurrentUserId();
             if (ModelState.IsValid)
