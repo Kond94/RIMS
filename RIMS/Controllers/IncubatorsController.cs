@@ -84,7 +84,7 @@ namespace RIMS.Controllers
 
             var incubatorsMonitoringDevices = _context.Incubators.Select(i => i.MonitoringDeviceId).ToList();
 
-            if (!monitoringDevices.Contains(incubator.MonitoringDeviceId) || (incubator.MonitoringDeviceId != 0 && incubatorsMonitoringDevices.Contains(incubator.MonitoringDeviceId)) {
+            if (monitoringDevices.Contains(incubator.MonitoringDeviceId) || (incubator.MonitoringDeviceId != 0 && incubatorsMonitoringDevices.Contains(incubator.MonitoringDeviceId)) {
                 ViewBag.NoMonitoringDevice = true;
                 ViewData["IncubatorModelId"] = new SelectList(_context.Set<IncubatorModel>(), "Id", "Capacity", incubator.IncubatorModelId);
                 return View(incubator);
